@@ -1,2 +1,3 @@
-# Insane-Project
-a school project 
+this is an insane school project. 
+
+
