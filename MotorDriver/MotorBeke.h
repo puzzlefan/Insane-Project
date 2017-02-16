@@ -5,7 +5,7 @@ class motor
 private:
 	int zgeschwindigkeit(0); //Zielgeschwindigkeit
 	int ageschwindigkeit(0); //aktuelle Geschwindigkeit
-	float zuwachs(0);//soll den Wert angeben, um denen die aktuelle Geschwindigkeiit erhöht werden soll
+	float zuwachs(0);//soll den Wert angeben, um denen die aktuelle Geschwindigkeiit erhÃ¶ht werden soll
 	
 
 public:
