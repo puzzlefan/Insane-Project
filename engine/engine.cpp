@@ -28,6 +28,7 @@ void engine::set_power(float pro) {
 			power = pro;
 		}
 	}
+	renew_driver_Speed();
 }
 
 void engine::renew_driver_Speed() {
