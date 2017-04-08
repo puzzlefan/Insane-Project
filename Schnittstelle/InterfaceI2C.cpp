@@ -28,13 +28,17 @@ void Schnittstelle::InterfaceSetUp()
 
 	pinMode(rhUltraschallsensorEcho1, INPUT);
 	pinMode(rhUltraschallsensorEcho2, INPUT);
+	pinMode(rhUltraschallsensorEcho3, INPUT);
 	pinMode(lhUltraschallsensorEcho1, INPUT);
 	pinMode(lhUltraschallsensorEcho2, INPUT);
+	pinMode(lhUltraschallsensorEcho3, INPUT);
 
 	pinMode(rhUltraschallsensorTrigger1, OUTPUT);
 	pinMode(rhUltraschallsensorTrigger2, OUTPUT);
+	pinMode(rhUltraschallsensorTrigger3, OUTPUT);
 	pinMode(lhUltraschallsensorTrigger1, OUTPUT);
 	pinMode(lhUltraschallsensorTrigger2, OUTPUT);
+	pinMode(lhUltraschallsensorTrigger3, OUTPUT);
 }
 
 void Schnittstelle::WerteSchreiben(int pin, int Wert)
