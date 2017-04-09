@@ -57,19 +57,19 @@ void SetUp()
 	pin.InterfaceSetUp();
 
 	//Ultraschallsensoren
-	rvUltraschallsensoren1.init(pin.get_rvUltraschallsensorenTrigger1(), pin.get_rvUltraschallsensorenEcho1());
-	rvUltraschallsensoren2.init(pin.get_rvUltraschallsensorenTrigger2(), pin.get_rvUltraschallsensorenEcho2());
-	rvUltraschallsensoren3.init(pin.get_rvUltraschallsensorenTrigger3(), pin.get_rvUltraschallsensorenEcho3());
-	lvUltraschallsensoren1.init(pin.get_lvUltraschallsensorenTrigger1(), pin.get_lvUltraschallsensorenEcho1());
-	lvUltraschallsensoren2.init(pin.get_lvUltraschallsensorenTrigger2(), pin.get_lvUltraschallsensorenEcho2());
-	lvUltraschallsensoren3.init(pin.get_lvUltraschallsensorenTrigger3(), pin.get_lvUltraschallsensorenEcho3());
+	rvUltraschallsensoren1.init(pin.get_rvUltraschallsensorTrigger1(), pin.get_rvUltraschallsensorEcho1());
+	rvUltraschallsensoren2.init(pin.get_rvUltraschallsensorTrigger2(), pin.get_rvUltraschallsensorEcho2());
+	rvUltraschallsensoren3.init(pin.get_rvUltraschallsensorTrigger3(), pin.get_rvUltraschallsensorEcho3());
+	lvUltraschallsensoren1.init(pin.get_lvUltraschallsensorTrigger1(), pin.get_lvUltraschallsensorEcho1());
+	lvUltraschallsensoren2.init(pin.get_lvUltraschallsensorTrigger2(), pin.get_lvUltraschallsensorEcho2());
+	lvUltraschallsensoren3.init(pin.get_lvUltraschallsensorTrigger3(), pin.get_lvUltraschallsensorEcho3());
 
-	rhUltraschallsensoren1.init(pin.get_rhUltraschallsensorenTrigger1(), pin.get_rhUltraschallsensorenEcho1());
-	rhUltraschallsensoren2.init(pin.get_rhUltraschallsensorenTrigger2(), pin.get_rhUltraschallsensorenEcho2());
-	rhUltraschallsensoren3.init(pin.get_rhUltraschallsensorenTrigger3(), pin.get_rhUltraschallsensorenEcho3());
-	lhUltraschallsensoren1.init(pin.get_lhUltraschallsensorenTrigger1(), pin.get_lhUltraschallsensorenEcho1());
-	lhUltraschallsensoren2.init(pin.get_lhUltraschallsensorenTrigger2(), pin.get_lhUltraschallsensorenEcho2());
-	lhUltraschallsensoren3.init(pin.get_lhUltraschallsensorenTrigger3(), pin.get_lhUltraschallsensorenEcho3());
+	rhUltraschallsensoren1.init(pin.get_rhUltraschallsensorTrigger1(), pin.get_rhUltraschallsensorEcho1());
+	rhUltraschallsensoren2.init(pin.get_rhUltraschallsensorTrigger2(), pin.get_rhUltraschallsensorEcho2());
+	rhUltraschallsensoren3.init(pin.get_rhUltraschallsensorTrigger3(), pin.get_rhUltraschallsensorEcho3());
+	lhUltraschallsensoren1.init(pin.get_lhUltraschallsensorTrigger1(), pin.get_lhUltraschallsensorEcho1());
+	lhUltraschallsensoren2.init(pin.get_lhUltraschallsensorTrigger2(), pin.get_lhUltraschallsensorEcho2());
+	lhUltraschallsensoren3.init(pin.get_lhUltraschallsensorTrigger3(), pin.get_lhUltraschallsensorEcho3());
 
 	//Motoren
 	MotorA.initialisEngine(pin.get_RadAf(), pin.get_RadAb());
