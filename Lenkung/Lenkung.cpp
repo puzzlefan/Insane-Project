@@ -4,7 +4,7 @@
 
 void Lenkung::berechnungWinkel (int xAchse, int yAchse)
 {
-	alpha = asin(yAchse / sqrt(xAchse*xAchse + yAchse*yAchse);
+	alpha = asin(yAchse / sqrt(xAchse*xAchse + yAchse*yAchse));
 
 	beta = M_PI / 4 - alpha;
 	beta = fabs(beta);//Betrag nehmen
@@ -49,7 +49,7 @@ void Lenkung::driften(int xAchse, int yAchse)
 		leistungRadC += lamda*(Vektor1-leistungRadC);
 
 		leistungRadB += lamda*(Vektor2-leistungRadB);
-		leistungRadD += lamda*(Vektor2-leidtungRadD);
+		leistungRadD += lamda*(Vektor2-leistungRadD);
 	}
 }
 
@@ -62,7 +62,7 @@ void Lenkung::drehen(int zAchse)
 	leistungRadD += -1*lamda*(dampfung*zAchse-leistungRadD);
 }
 
-void parken()
+void Lenkung::parken()
 {
 	leistungRadA += lamda*(0 - leistungRadA);
 	leistungRadB += lamda*(0 - leistungRadB);

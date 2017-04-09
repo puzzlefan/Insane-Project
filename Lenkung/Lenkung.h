@@ -27,7 +27,7 @@ private:
 
 public:
 	//Berechnungen der einzelnen Längen etc. nur Klassen intern benötigt
-	void berechnungenLange(int xAchse, int yAchse);
+	void berechnungLange(int xAchse, int yAchse);
 	void berechnungWinkel(int xAchse, int yAchse);
 	
 	//verschiedene Aufteilungen der Lestungen je nach Modi
