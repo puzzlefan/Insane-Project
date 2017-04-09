@@ -123,13 +123,13 @@ int main()
 			case 0:LenkungCDrive.parken();
 				break;
 		
-			case 1:LenkungCDrive.fahrtModiNormalesFahren(xAchse, yAchse);
+			case 1:LenkungCDrive.normalesLenkung(xAchse, yAchse);
 				break;
 
-			case 2:LenkungCDrive.fahrtModiDriften(xAchse, yAchse);
+			case 2:LenkungCDrive.driften(xAchse, yAchse);
 				break;
 
-			case 3:LenkkungCDrive.fahrtModiDrehen(zAchse);
+			case 3:LenkungCDrive.drehen(zAchse);
 				break;
 		}
 
