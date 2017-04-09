@@ -1,0 +1,8 @@
+CXX     = g++
+CXXFLAGS= -O2 -Wall -g -std=c++11 -I. -I../Lenkung -I../Schnittstelle
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $<
+
+%.o: %.cc
+	$(CXX) $(CXXFLAGS) -c $<
