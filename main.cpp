@@ -24,7 +24,7 @@ void SetUp()
 	Joystick joystick;
 
 	//Ultraschallsensoren
-	Sonar rvUlreaschallsensor1;
+	Sonar rvUltraschallsensor1;
 	Sonar rvUltraschallsensor2;
 	Sonar rvUltraschallsensor3;
 	Sonar lvUltraschallsensor1;
@@ -43,7 +43,7 @@ void SetUp()
 	engine MotorB;
 	engine MotorC;
 	engine MotorD;
-	engine MotorCDirveA;
+	engine MotorCDriveA;
 	engine MotorCDriveB;
 	engine MotorCDriveC;
 	engine MotorCDriveD;
