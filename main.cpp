@@ -136,7 +136,8 @@ int main()
 		//Zuweisung der Leistungen den Motoren 
 		MotorA.set_power(pin.get_leistungMotorA());
 		MotorB.set_power(pin.get_leistungMotorB());
-		MotorC.set_power
+		MotorC.set_power(pin.get_leistungMotorC());
+		MotorD.set_power(pin.get_leistungMotorD());
 
 	}
 
