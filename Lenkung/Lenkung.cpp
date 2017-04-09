@@ -10,18 +10,18 @@ void Lenkung::berechnungWinkel (int xAchse, int yAchse)
 	beta = fabs(beta);//Betrag nehmen
 }
 
-void Lenkung::berechnungLänge(int xAchse, int yAchse)
+void Lenkung::berechnungLange(int xAchse, int yAchse)
 {
 	berechnungWinkel(xAchse, yAchse);
 	
-	längeLeistung = sqrt(xAchse*xAchse + yAchse*yAchse);
-	Vektor1 = sin(beta)*längeLeistung;
-	Vektor2 = sqrt(längeLeisung*längeLeistung + Vektor1*Vektor1);
+	langeLeistung = sqrt(xAchse*xAchse + yAchse*yAchse);
+	Vektor1 = sin(beta)*langeLeistung;
+	Vektor2 = sqrt(langeLeisung*langeLeistung + Vektor1*Vektor1);
 }
 
 void Lenkung::normaleLenkung(int xAchse, int yAchse)
 {
-	berechnungLänge(xAchse, yAchse);
+	berechnungLange(xAchse, yAchse);
 
 	leistungRadA += lamda*(Vektor1-leistungRadA);
 	leistungRadD += lamda*(Vektor1-leistungRadD);
@@ -32,7 +32,7 @@ void Lenkung::normaleLenkung(int xAchse, int yAchse)
 
 void Lenkung::driften(int xAchse, int yAchse)
 {
-	berechnungLänge(xAchse, yAchse);
+	berechnungLange(xAchse, yAchse);
 
 	if (yAchse == 0) //seitwärts fahren; ansonsten keine Werte da yAchse = 0
 	{
@@ -55,11 +55,11 @@ void Lenkung::driften(int xAchse, int yAchse)
 
 void Lenkung::drehen(int zAchse)
 {
-	leistungRadB += lamda*(dämpfung*zAchse-leistungRadB);
-	leistungRadC += lamda*(dämpfung*zAchse-leistungRadC);
+	leistungRadB += lamda*(dampfung*zAchse-leistungRadB);
+	leistungRadC += lamda*(dampfung*zAchse-leistungRadC);
 
-	leistungRadA += -1*lamda*(dämpfung*zAchse-leistungRadA);
-	leistungRadD += -1*lamda*(dämpfung*zAchse-leistungRadD);
+	leistungRadA += -1*lamda*(dampfung*zAchse-leistungRadA);
+	leistungRadD += -1*lamda*(dampfung*zAchse-leistungRadD);
 }
 
 void parken()
