@@ -90,12 +90,12 @@ int fall()
 	}
 	else
 	{
-		if (pin.get_fahrtModiNormalesFahren()) 
+		if (pin.get_fahrtModiNormalesFahren() == 1) 
 		{
 			return 1;
 		}
 
-		if (pin.get_fahrtModiDrehen()) 
+		if (pin.get_fahrtModiDrehen() == 1) 
 		{
 			return 3;
 		}
