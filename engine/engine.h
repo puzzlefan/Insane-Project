@@ -16,7 +16,7 @@ private:
 	int PWMrperiodTime = 100;//the maximum time of one puls (if it is at max range it is completly on)
 							 //the resolution shortest time are 100 microseconds
 							 //procentual power
-	float power = 0;
+	double power = 0;
 
 public:
 	//initialization no constructor because of the better name
@@ -26,7 +26,7 @@ public:
 	//other set functions
 	void set_power(float pro);
 	//other get functions
-	float get_power() { return power; }
+	double get_power() { return power; }
 	//utility functions
 	void renew_driver_Speed();
 };

@@ -12,7 +12,7 @@ void engine::initialisEngine(int fPin, int bPin) {
 
 }
 
-void engine::set_power(float pro) {
+void engine::set_power(double pro) {
 	if (pro >= 100)
 	{
 		power = 100;
