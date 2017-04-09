@@ -123,7 +123,7 @@ int main()
 			case 0:LenkungCDrive.parken();
 				break;
 		
-			case 1:LenkungCDrive.normalesLenkung(xAchse, yAchse);
+			case 1:LenkungCDrive.normaleLenkung(xAchse, yAchse);
 				break;
 
 			case 2:LenkungCDrive.driften(xAchse, yAchse);
@@ -134,10 +134,10 @@ int main()
 		}
 
 		//Zuweisung der Leistungen den Motoren 
-		MotorA.set_power(pin.get_leistungMotorA());
-		MotorB.set_power(pin.get_leistungMotorB());
-		MotorC.set_power(pin.get_leistungMotorC());
-		MotorD.set_power(pin.get_leistungMotorD());
+		MotorA.set_power(LenkungCDrive.get_leistungMotorA());
+		MotorB.set_power(LenkungCDrive.get_leistungMotorB());
+		MotorC.set_power(LenkungCDrive.get_leistungMotorC());
+		MotorD.set_power(LenkkungCDrive.get_leistungMotorD());
 	}
 
 	return 0;
