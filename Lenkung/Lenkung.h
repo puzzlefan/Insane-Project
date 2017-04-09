@@ -2,7 +2,7 @@
 #ifndef Lenkung_H
 #define Lenkung_H
 
-#include <interfaceI2C.h>
+#include <InterfaceI2C.h>
 #include <math.h>
 
 class Lenkung 
