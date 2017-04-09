@@ -134,10 +134,10 @@ int main()
 		}
 
 		//Zuweisung der Leistungen den Motoren 
-		MotorA.set_power(LenkungCDrive.get_leistungMotorA());
-		MotorB.set_power(LenkungCDrive.get_leistungMotorB());
-		MotorC.set_power(LenkungCDrive.get_leistungMotorC());
-		MotorD.set_power(LenkkungCDrive.get_leistungMotorD());
+		MotorA.set_power(LenkungCDrive.get_leistungRadA());
+		MotorB.set_power(LenkungCDrive.get_leistungRadB());
+		MotorC.set_power(LenkungCDrive.get_leistungRadC());
+		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 	}
 
 	return 0;
