@@ -84,7 +84,7 @@ void SetUp()
 
 int fall()
 {
-	if (pin.get_parken() == 1)
+	if (pin.get_Parken() == 1)
 	{
 		return 0;
 	}
