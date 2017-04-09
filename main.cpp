@@ -90,12 +90,12 @@ int fall()
 	}
 	else
 	{
-		if (pin.get_fahrtModiNormalesFahren) 
+		if (pin.get_fahrtModiNormalesFahren()) 
 		{
 			return 1;
 		}
 
-		if (pin.get_fahrtModiDehen) 
+		if (pin.get_fahrtModiDrehen()) 
 		{
 			return 3;
 		}
@@ -118,18 +118,18 @@ int main()
 		int yAchse = 10;
 		int zAchse = 0;
 
-		switch(int fall())
+		switch(fall())
 		{
-			case 0: void LenkungCDrive.parken();
+			case 0:LenkungCDrive.parken();
 				break;
 		
-			case 1: void LenkungCDrive.fahrtModiNormalesFahren(xAchse, yAchse);
+			case 1:LenkungCDrive.fahrtModiNormalesFahren(xAchse, yAchse);
 				break;
 
-			case 2: void LenkungCDrive.fahrtModiDriften(xAchse, yAchse);
+			case 2:LenkungCDrive.fahrtModiDriften(xAchse, yAchse);
 				break;
 
-			case 3: void LenkkungCDrive.fahrtModiDrehen(zAchse);
+			case 3:LenkkungCDrive.fahrtModiDrehen(zAchse);
 				break;
 		}
 
