@@ -9,7 +9,7 @@ class Schnittstelle
 {
 private:
 	
-	// Variablen für die einzelnen Sensoren...
+	// Variablen für die einzelnen Sensoren; geben die PinNr. an
 	int rvUltraschallsensorEcho1 = 100 + 8;
 	int rvUltraschallsensorEcho2 = 100 + 9;
 	int rvUltraschallsensorEcho3 = 100 + 10;
@@ -38,10 +38,36 @@ private:
 	int lhUltraschallsensorTrigger2 = 300 + 3;
 	int lhUltraschallsensorTrigger3 = 300 + 2;
 
-	//Variablen für die Schalter
+	//Variablen für die Schalter; geben die PinNr. an
 	int Parken = 200 + 8;
 	int fahrtModiNormalesFahren = 200 + 9;
 	int fahrtModiDrehen = 200 + 10;
+
+	//Variablen für die Motoren; geben die PinNr. an
+	int RadAf = 7;
+	int RadAb = 0;
+	
+	int RadBf = 2;
+	int RadBb = 3;
+	
+	int RadCf = 23;
+	int RadCb = 24;
+	
+	int RadDf = 21;
+	int RadDb = 22;
+
+	//Variablen für die Motoren am C-Modul; geben die PinNr.an
+	int cRadAf = 25;
+	int cRadAb = 1;
+
+	int cRadBf = 6;
+	int cRadBb = 26;
+
+	int cRadCf = 27;
+	int cRadCb = 28;
+
+	int cRadDf = 4;
+	int cRadDb = 5;
 
 public:
 	void InterfaceSetUp();
@@ -79,6 +105,24 @@ public:
 	int get_Parken() { return Parken; }
 	int get_fahrtModiNormalesFahren() { return fahrtModiNormalesFahren; }
 	int get_fahrtModiDrehen() { return fahrtModiDrehen; }
+
+	int get_RadAf() { return RadAf; }
+	int get_RadAb() { return RadAb; }
+	int get_RadBf() { return RadBf; }
+	int get_RadBb() { return RadBb; }
+	int get_RadCf() { return RadCf; }
+	int get_RadCb() { return RadCb; }
+	int get_RadDf() { return RadDf; }
+	int get_RadDb() { return RadDb; }
+
+	int get_cRadAf() { return cRadAf; }
+	int get_cRadAb() { return cRadAb; }
+	int get_cRadBf() { return cRadBf; }
+	int get_cRadBb() { return cRadBb; }
+	int get_cRadCf() { return cRadCf; }
+	int get_cRadCb() { return cRadCb; }
+	int get_cRadDf() { return cRadDf; }
+	int get_cRadDb() { return cRadDb; }
 };
 
 #endif
