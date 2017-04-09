@@ -4,10 +4,10 @@
 #include <mcp23017.h>
 #include <softPwm.h>
 #include <joystick.hh> //Klassen zur Verarbeitung von Sensordaten
-#include <Rotationssensor.h>
+//#include <Rotationssensor.h>
 #include <libSonar.h>
 #include <InterfaceI2C.h> // Schnittstelle
-#include <Lenkkung.h> //Generelle Steuerung
+#include <Lenkung.h> //Generelle Steuerung
 #include <engine.h> // Klasse um Daten an Motoren weiter zu geben
 
 
@@ -18,38 +18,38 @@ void SetUp()
 	// Erstellen einzelen Objekte aus den Klassen
 
 	//Schnittstellen
-	InterfaceI2C::pin();
+	InterfaceI2C pin;
 
 	//Joystick
-	joystick::Joystick();
+	joystick Joystick;
 
 	//Ultraschallsensoren
-	libSonar::rvUlreaschallsensor1();
-	libSonar::rvUltraschallsensor2();
-	libSonar::rvUltraschallsensor3();
-	libSonar::lvUltraschallsensor1();
-	libSonar::lvUltraschallsensor2();
-	libSonar::lvUltraschallsensor3();
+	libSonar rvUlreaschallsensor1;
+	libSonar rvUltraschallsensor2;
+	libSonar rvUltraschallsensor3;
+	libSonar lvUltraschallsensor1;
+	libSonar lvUltraschallsensor2;
+	libSonar lvUltraschallsensor3;
 
-	libSonar::rhUltraschallsensor1();
-	libSonar::rhUltraschallsensor2();
-	libSonar::rhUltraschallsensor3();
-	libSonar::lhUltraschallsensor1();
-	libSonar::lhUltraschallsensor2();
-	libSonar::lhUltraschallsensor3();
+	libSonar rhUltraschallsensor1;
+	libSonar rhUltraschallsensor2;
+	libSonar rhUltraschallsensor3;
+	libSonar lhUltraschallsensor1;
+	libSonar lhUltraschallsensor2;
+	libSonar lhUltraschallsensor3;
 
 	//Motoren
-	engine::MotorA();
-	engine::MotorB();
-	engine::MotorC();
-	engine::MotorD();
-	engine::MotorCDirveA();
-	engine::MotorCDriveB();
-	engine::MotorCDriveC();
-	engine::MotorCDriveD();
+	engine MotorA;
+	engine MotorB;
+	engine MotorC;
+	engine MotorD;
+	engine MotorCDirveA;
+	engine MotorCDriveB;
+	engine MotorCDriveC;
+	engine MotorCDriveD;
 
 	//Lenkung
-	Lenkung::LenkungCDrive();
+	Lenkung LenkungCDrive;
 
 	//SetUp-Funktionen der Klassen aufrufen
 
@@ -82,12 +82,61 @@ void SetUp()
 	MotorCDriveD.initialisEngine(pin.get_cRadDf(), pin.get_cRadDb());
 }
 
+int fall()
+{
+	if (pin.get_parken() == 1)
+	{
+		return 0;
+	}
+	else
+	{
+		if (pin.get_fahrtModiNormalesFahren) 
+		{
+			return 1;
+		}
+
+		if (pin.get_fahrtModiDehen) 
+		{
+			return 3;
+		}
+		
+		//if (c-button gedrückt) {return 4;}
+
+		return 2;
+	}
+
+}
+
+
 int main()
 {
 	void SetUp();
 
 	while (true)
 	{
+		int xAchse = 50;//eig. Werte von Joystick
+		int yAchse = 10;
+		int zAchse = 0;
+
+		switch(int fall())
+		{
+			case 0: void LenkungCDrive.parken();
+				break;
+		
+			case 1: void LenkungCDrive.fahrtModiNormalesFahren(xAchse, yAchse);
+				break;
+
+			case 2: void LenkungCDrive.fahrtModiDriften(xAchse, yAchse);
+				break;
+
+			case 3: void LenkkungCDrive.fahrtModiDrehen(zAchse);
+				break;
+		}
+
+		//Zuweisung der Leistungen den Motoren 
+		MotorA.set_power(pin.get_leistungMotorA());
+		MotorB.set_power(pin.get_leistungMotorB());
+		MotorC.set_power
 
 	}
 
