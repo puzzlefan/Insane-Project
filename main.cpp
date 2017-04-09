@@ -21,22 +21,22 @@ void SetUp()
 	Schnittstelle pin;
 
 	//Joystick
-	joystick Joystick;
+	Joystick joystick;
 
 	//Ultraschallsensoren
-	libSonar rvUlreaschallsensor1;
-	libSonar rvUltraschallsensor2;
-	libSonar rvUltraschallsensor3;
-	libSonar lvUltraschallsensor1;
-	libSonar lvUltraschallsensor2;
-	libSonar lvUltraschallsensor3;
+	Sonar rvUlreaschallsensor1;
+	Sonar rvUltraschallsensor2;
+	Sonar rvUltraschallsensor3;
+	Sonar lvUltraschallsensor1;
+	Sonar lvUltraschallsensor2;
+	Sonar lvUltraschallsensor3;
 
-	libSonar rhUltraschallsensor1;
-	libSonar rhUltraschallsensor2;
-	libSonar rhUltraschallsensor3;
-	libSonar lhUltraschallsensor1;
-	libSonar lhUltraschallsensor2;
-	libSonar lhUltraschallsensor3;
+	Sonar rhUltraschallsensor1;
+	Sonar rhUltraschallsensor2;
+	Sonar rhUltraschallsensor3;
+	Sonar lhUltraschallsensor1;
+	Sonar lhUltraschallsensor2;
+	Sonar lhUltraschallsensor3;
 
 	//Motoren
 	engine MotorA;
