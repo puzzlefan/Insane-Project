@@ -24,7 +24,7 @@ public:
 	//sets the rotationstate values manually actual values coulb be automatet later
 	//returns the rotationstate values
 	//other set functions
-	void set_power(float pro);
+	void set_power(double pro);
 	//other get functions
 	double get_power() { return power; }
 	//utility functions

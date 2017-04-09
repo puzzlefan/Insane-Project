@@ -138,7 +138,6 @@ int main()
 		MotorB.set_power(pin.get_leistungMotorB());
 		MotorC.set_power(pin.get_leistungMotorC());
 		MotorD.set_power(pin.get_leistungMotorD());
-
 	}
 
 	return 0;
