@@ -39,6 +39,10 @@ void Schnittstelle::InterfaceSetUp()
 	pinMode(lhUltraschallsensorTrigger1, OUTPUT);
 	pinMode(lhUltraschallsensorTrigger2, OUTPUT);
 	pinMode(lhUltraschallsensorTrigger3, OUTPUT);
+
+	pinMode(Parken, INPUT);
+	pinMode(fahrtModiNormalesFahren, INPUT);
+	pinMode(fahrtModiDrehen, INPUT);
 }
 
 void Schnittstelle::WerteSchreiben(int pin, int Wert)
