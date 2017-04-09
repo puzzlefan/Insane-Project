@@ -10,46 +10,46 @@
 #include <Lenkung.h> //Generelle Steuerung
 #include <engine.h> // Klasse um Daten an Motoren weiter zu geben
 
+// Erstellen einzelen Objekte aus den Klassen
+
+//Schnittstellen
+Schnittstelle pin;
+
+//Joystick
+Joystick joystick;
+
+//Ultraschallsensoren
+Sonar rvUltraschallsensor1;
+Sonar rvUltraschallsensor2;
+Sonar rvUltraschallsensor3;
+Sonar lvUltraschallsensor1;
+Sonar lvUltraschallsensor2;
+Sonar lvUltraschallsensor3;
+
+Sonar rhUltraschallsensor1;
+Sonar rhUltraschallsensor2;
+Sonar rhUltraschallsensor3;
+Sonar lhUltraschallsensor1;
+Sonar lhUltraschallsensor2;
+Sonar lhUltraschallsensor3;
+
+//Motoren
+engine MotorA;
+engine MotorB;
+engine MotorC;
+engine MotorD;
+engine MotorCDriveA;
+engine MotorCDriveB;
+engine MotorCDriveC;
+engine MotorCDriveD;
+
+//Lenkung
+Lenkung LenkungCDrive;
+
 
 void SetUp()
 {
 	wiringPiSetup();
-
-	// Erstellen einzelen Objekte aus den Klassen
-
-	//Schnittstellen
-	Schnittstelle pin;
-
-	//Joystick
-	Joystick joystick;
-
-	//Ultraschallsensoren
-	Sonar rvUltraschallsensor1;
-	Sonar rvUltraschallsensor2;
-	Sonar rvUltraschallsensor3;
-	Sonar lvUltraschallsensor1;
-	Sonar lvUltraschallsensor2;
-	Sonar lvUltraschallsensor3;
-
-	Sonar rhUltraschallsensor1;
-	Sonar rhUltraschallsensor2;
-	Sonar rhUltraschallsensor3;
-	Sonar lhUltraschallsensor1;
-	Sonar lhUltraschallsensor2;
-	Sonar lhUltraschallsensor3;
-
-	//Motoren
-	engine MotorA;
-	engine MotorB;
-	engine MotorC;
-	engine MotorD;
-	engine MotorCDriveA;
-	engine MotorCDriveB;
-	engine MotorCDriveC;
-	engine MotorCDriveD;
-
-	//Lenkung
-	Lenkung LenkungCDrive;
 
 	//SetUp-Funktionen der Klassen aufrufen
 
