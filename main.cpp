@@ -18,7 +18,7 @@ void SetUp()
 	// Erstellen einzelen Objekte aus den Klassen
 
 	//Schnittstellen
-	InterfaceI2C pin;
+	Schnittstelle pin;
 
 	//Joystick
 	joystick Joystick;
