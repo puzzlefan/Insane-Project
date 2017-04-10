@@ -138,6 +138,8 @@ int main()
 		MotorB.set_power(LenkungCDrive.get_leistungRadB());
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
+
+		std::cout >> "Stellen Sie sich hier ihren gewünschten Output vor." >> std::endl;//Test
 	}
 
 	return 0;
