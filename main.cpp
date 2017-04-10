@@ -17,7 +17,7 @@ Schnittstelle pin;
 
 //Joystick
 Joystick joystick("/dev/input/js0");
-JoystickEvent joystickXAchse;
+JoystickEvent joystickXAchse(0x02);
 JoystickEvent joystickYAchse;
 
 //Ultraschallsensoren
@@ -118,7 +118,7 @@ int main()
 
 	if (joystick.isFound() == false) { std::cout << "Joystick nicht da!" << std::endl; }
 
-	for (int i=0;i<10;i++)
+	for (int i=0;i<30;i++)
 	{
 		int xAchse = int(joystickXAchse.value);//eig. Werte von Joystick
 		int yAchse = int(joystickYAchse.value);
@@ -146,7 +146,6 @@ int main()
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
 		std::cout << xAchse << "  ,  " << yAchse << std::endl;
-		std::cout << "ein Zyklus..." << std::endl;
 	}
 
 	return 0;
