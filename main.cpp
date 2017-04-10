@@ -20,7 +20,7 @@ Joystick joystick("/dev/input/js0");
 JoystickEvent joystickXAchse;
 JoystickEvent joystickYAchse;
 
-/*//Ultraschallsensoren
+//Ultraschallsensoren
 Sonar rvUltraschallsensor1;
 Sonar rvUltraschallsensor2;
 Sonar rvUltraschallsensor3;
@@ -43,7 +43,7 @@ engine MotorD;
 engine MotorCDriveA;
 engine MotorCDriveB;
 engine MotorCDriveC;
-engine MotorCDriveD;*/
+engine MotorCDriveD;
 
 //Lenkung
 Lenkung LenkungCDrive;
