@@ -18,7 +18,7 @@ Schnittstelle pin;
 //Joystick
 Joystick joystick("/dev/input/js0");
 JoystickEvent joystickXAchse;
-joystickEvent joystickYAchse;
+JoystickEvent joystickYAchse;
 
 /*//Ultraschallsensoren
 Sonar rvUltraschallsensor1;
@@ -143,7 +143,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());*/
 
-		std::cout << xAchse; "  ,  "; yAchse << std::endl;
+		std::cout << xAchse << "  ,  " << yAchse << std::endl;
 
 		char h;
 		std::cin >> h;
