@@ -114,11 +114,11 @@ int fall()
 
 int main()
 {
-	void SetUp();
+	SetUp();
 
 	if (joystick.isFound() == false) { std::cout << "Joystick nicht da!" << std::endl; }
 
-	for (int i=0;i>1000;i++)
+	for (int i=0;i<10;i++)
 	{
 		int xAchse = int(joystickXAchse.value);//eig. Werte von Joystick
 		int yAchse = int(joystickYAchse.value);
