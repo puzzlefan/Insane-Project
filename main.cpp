@@ -20,7 +20,7 @@ Joystick joystick("/dev/input/js0");
 JoystickEvent joystickXAchse;
 joystickEvent joystickYAchse;
 
-//Ultraschallsensoren
+/*//Ultraschallsensoren
 Sonar rvUltraschallsensor1;
 Sonar rvUltraschallsensor2;
 Sonar rvUltraschallsensor3;
@@ -43,7 +43,7 @@ engine MotorD;
 engine MotorCDriveA;
 engine MotorCDriveB;
 engine MotorCDriveC;
-engine MotorCDriveD;
+engine MotorCDriveD;*/
 
 //Lenkung
 Lenkung LenkungCDrive;
@@ -58,7 +58,7 @@ void SetUp()
 	//Schnittstelle
 	pin.InterfaceSetUp();
 
-	//Ultraschallsensoren
+	/*//Ultraschallsensoren
 	rvUltraschallsensor1.init(pin.get_rvUltraschallsensorTrigger1(), pin.get_rvUltraschallsensorEcho1());
 	rvUltraschallsensor2.init(pin.get_rvUltraschallsensorTrigger2(), pin.get_rvUltraschallsensorEcho2());
 	rvUltraschallsensor3.init(pin.get_rvUltraschallsensorTrigger3(), pin.get_rvUltraschallsensorEcho3());
@@ -81,7 +81,7 @@ void SetUp()
 	MotorCDriveA.initialisEngine(pin.get_cRadAf(), pin.get_cRadAb());
 	MotorCDriveB.initialisEngine(pin.get_cRadBf(), pin.get_cRadBb());
 	MotorCDriveC.initialisEngine(pin.get_cRadCf(), pin.get_cRadCb());
-	MotorCDriveD.initialisEngine(pin.get_cRadDf(), pin.get_cRadDb());
+	MotorCDriveD.initialisEngine(pin.get_cRadDf(), pin.get_cRadDb());*/
 
 	std::cout << "SetUp vollständig" << std::endl;
 }
@@ -99,7 +99,7 @@ int fall()
 			return 1;
 		}
 
-		if (pin.werteLesen(pin.get_fahrtModiDrehen()) == 1) 
+		if (pin.WerteLesen(pin.get_fahrtModiDrehen()) == 1) 
 		{
 			return 3;
 		}
@@ -137,11 +137,11 @@ int main()
 				break;
 		}
 
-		//Zuweisung der Leistungen den Motoren 
+		/*//Zuweisung der Leistungen den Motoren 
 		MotorA.set_power(LenkungCDrive.get_leistungRadA());
 		MotorB.set_power(LenkungCDrive.get_leistungRadB());
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
-		MotorD.set_power(LenkungCDrive.get_leistungRadD());
+		MotorD.set_power(LenkungCDrive.get_leistungRadD());*/
 
 		std::cout << xAchse"  ,  "yAchse << std::endl;
 
