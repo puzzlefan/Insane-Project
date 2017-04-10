@@ -2,7 +2,6 @@
 #include <softPwm.h>
 
 void engine::initialisEngine(int fPin, int bPin) {
-	int x = wiringPiSetup();
 	fwd = fPin;
 	bwd = bPin;
 	pinMode(fwd, OUTPUT);

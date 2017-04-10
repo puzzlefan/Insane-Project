@@ -116,10 +116,10 @@ int main()
 {
 	void SetUp();
 
-	while (true)
+	for (int i=0,i>30,i++)
 	{
-		short xAchse = joystickXAchse.value;//eig. Werte von Joystick
-		short yAchse = joystickYAchse.value;
+		int xAchse = int(joystickXAchse.value);//eig. Werte von Joystick
+		int yAchse = int(joystickYAchse.value);
 		int zAchse = 0;
 
 		switch(fall())
@@ -144,10 +144,6 @@ int main()
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());*/
 
 		std::cout << xAchse << "  ,  " << yAchse << std::endl;
-
-		char h;
-		std::cin >> h;
-		if (h == 3) { break; }
 	}
 
 	return 0;
