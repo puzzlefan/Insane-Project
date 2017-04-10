@@ -114,7 +114,7 @@ int main()
 {
 	void SetUp();
 
-	while (true)
+	while (bool i == true)
 	{
 		int xAchse = joystickXAchse.value;//eig. Werte von Joystick
 		int yAchse = joystickYAchse.value;
@@ -141,8 +141,10 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout >> joystickXAchse.isAxis "  ,  "joystickYAchse.isAxis  >> std::endl;//Testausgabe
-		std::cout >> joystickXAchse.value "  ,  "joystickYAchse.value >> std::endl;
+		std::cout << joystickXAchse.value "  ,  "joystickYAchse.value << std::endl;
+
+		std::cin >> char h;
+		if (h == "z") { i = false; }
 	}
 
 	return 0;
