@@ -82,6 +82,8 @@ void SetUp()
 	MotorCDriveB.initialisEngine(pin.get_cRadBf(), pin.get_cRadBb());
 	MotorCDriveC.initialisEngine(pin.get_cRadCf(), pin.get_cRadCb());
 	MotorCDriveD.initialisEngine(pin.get_cRadDf(), pin.get_cRadDb());
+
+	std::cout << "SetUp vollständig" << std::endl;
 }
 
 int fall()
@@ -114,7 +116,7 @@ int main()
 {
 	void SetUp();
 
-	while (bool i == true)
+	while (true)
 	{
 		int xAchse = joystickXAchse.value;//eig. Werte von Joystick
 		int yAchse = joystickYAchse.value;
@@ -141,10 +143,11 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << joystickXAchse.value "  ,  "joystickYAchse.value << std::endl;
+		std::cout << xAchse"  ,  "yAchse << std::endl;
 
-		std::cin >> char h;
-		if (h == "z") { i = false; }
+		char h;
+		std::cin >> h;
+		if (h == "z") { break; }
 	}
 
 	return 0;
