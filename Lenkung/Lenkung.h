@@ -41,5 +41,6 @@ public:
 	double get_leistungRadB() { return leistungRadB; }
 	double get_leistungRadC() { return leistungRadC; }
 	double get_leistungRadD() { return leistungRadD; }
+	double get_langeLeistung() { return langeLeistung; }
 };
 #endif
