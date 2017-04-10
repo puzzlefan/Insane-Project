@@ -116,7 +116,7 @@ int main()
 {
 	void SetUp();
 
-	if (joystick.isFound == false) { std::cout << "Joystick nicht da!" << std::endl; }
+	if (joystick.isFound() == false) { std::cout << "Joystick nicht da!" << std::endl; }
 
 	for (int i=0;i>1000;i++)
 	{
