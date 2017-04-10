@@ -86,18 +86,18 @@ void SetUp()
 
 int fall()
 {
-	if (pin.get_Parken() == 1)
+	if (pin.WerteLesen(pin.get_Parken()) == 1)
 	{
 		return 0;
 	}
 	else
 	{
-		if (pin.get_fahrtModiNormalesFahren() == 1) 
+		if (pin.WerteLesen(pin.get_fahrtModiNormalesFahren()) == 1) 
 		{
 			return 1;
 		}
 
-		if (pin.get_fahrtModiDrehen() == 1) 
+		if (pin.werteLesen(pin.get_fahrtModiDrehen()) == 1) 
 		{
 			return 3;
 		}
@@ -142,7 +142,7 @@ int main()
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
 		std::cout >> joystickXAchse.isAxis "  ,  "joystickYAchse.isAxis  >> std::endl;//Testausgabe
-		std::cout >> joystickXAchse.value "  ,  "joystickYAchse.value >> std::endl
+		std::cout >> joystickXAchse.value "  ,  "joystickYAchse.value >> std::endl;
 	}
 
 	return 0;
