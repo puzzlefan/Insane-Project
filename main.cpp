@@ -16,7 +16,9 @@
 Schnittstelle pin;
 
 //Joystick
-Joystick joystick;
+Joystick joystick("/dev/input/js0");
+JoystickEvent joystickXAchse;
+joystickEvent joystickYAchse;
 
 //Ultraschallsensoren
 Sonar rvUltraschallsensor1;
@@ -114,7 +116,7 @@ int main()
 
 	while (true)
 	{
-		int xAchse = 50;//eig. Werte von Joystick
+		int xAchse = joystickXAchse.value;//eig. Werte von Joystick
 		int yAchse = 10;
 		int zAchse = 0;
 
