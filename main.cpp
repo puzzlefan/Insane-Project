@@ -118,8 +118,8 @@ int main()
 
 	while (true)
 	{
-		short xAchse = joystickXAchse.value();//eig. Werte von Joystick
-		short yAchse = joystickYAchse.value();
+		short xAchse = joystickXAchse.value;//eig. Werte von Joystick
+		short yAchse = joystickYAchse.value;
 		int zAchse = 0;
 
 		switch(fall())
