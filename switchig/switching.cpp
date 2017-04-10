@@ -1,7 +1,6 @@
-// switching.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
+// switching.cpp : Definiert den Einstiegspunkt fÃ¼r die Konsolenanwendung.
 //
 
-#include "stdafx.h"
 #include "switching.h"
 #include <unistd.h>
 #include <wiringPi.h>
