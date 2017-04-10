@@ -116,7 +116,7 @@ int main()
 {
 	void SetUp();
 
-	for (int i=0,i>30,i++)
+	for (int i=0;i>30;i++)
 	{
 		int xAchse = int(joystickXAchse.value);//eig. Werte von Joystick
 		int yAchse = int(joystickYAchse.value);
