@@ -17,7 +17,7 @@ Schnittstelle pin;
 
 //Joystick
 Joystick joystick("/dev/input/js0");
-JoystickEvent joystickXAchse(0x02);
+JoystickEvent joystickXAchse;
 JoystickEvent joystickYAchse;
 
 //Ultraschallsensoren
