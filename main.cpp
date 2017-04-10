@@ -146,6 +146,7 @@ int main()
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
 		std::cout << xAchse << "  ,  " << yAchse << std::endl;
+		std::cout << "ein Zyklus..." << std::endl;
 	}
 
 	return 0;
