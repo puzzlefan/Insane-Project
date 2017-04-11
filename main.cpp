@@ -86,9 +86,6 @@ void SetUp()
 	MotorCDriveC.initialisEngine(pin.get_cRadCf(), pin.get_cRadCb());
 	MotorCDriveD.initialisEngine(pin.get_cRadDf(), pin.get_cRadDb());
 
-	//lenkung
-	LenkungCDrive.Initialisieren();
-
 	std::cout << "SetUp vollständig" << std::endl;
 }
 

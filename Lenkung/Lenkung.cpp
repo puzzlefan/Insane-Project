@@ -2,14 +2,6 @@
 #include <Lenkung.h>
 #include <math.h>
 
-void Initialisieren()
-{
-	leistungRadA = 0;
-	leistungRadB = 0;
-	leistungRadC = 0;
-	leistungRadD = 0;
-}
-
 void Lenkung::berechnungWinkel (int xAchse, int yAchse)
 {
 	alpha = asin(yAchse / sqrt(xAchse*xAchse + yAchse*yAchse));
@@ -19,12 +11,21 @@ void Lenkung::berechnungWinkel (int xAchse, int yAchse)
 }
 
 void Lenkung::berechnungLange(int xAchse, int yAchse)
-{
-	berechnungWinkel(xAchse, yAchse);
-	
-	langeLeistung = sqrt(xAchse*xAchse + yAchse*yAchse);
-	Vektor1 = sin(beta)*langeLeistung;
-	Vektor2 = sqrt(langeLeistung*langeLeistung + Vektor1*Vektor1);
+{	
+	if (xAchse&&yAchse^ != 0)
+	{
+		berechnungWinkel(xAchse, yAchse);
+
+		langeLeistung = sqrt(xAchse*xAchse + yAchse*yAchse);
+		Vektor1 = sin(beta)*langeLeistung;
+		Vektor2 = sqrt(langeLeistung*langeLeistung + Vektor1*Vektor1);
+	}
+
+	else 
+	{
+		Vektor1 = 0;
+		Vektor2 = 0;
+	}
 }
 
 void Lenkung::normaleLenkung(int xAchse, int yAchse)
