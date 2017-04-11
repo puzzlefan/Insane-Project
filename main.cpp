@@ -118,6 +118,8 @@ int main()
 
 	if (joystick.isFound() == false) { std::cout << "Joystick nicht da!" << std::endl; }
 
+	std::cout joystickXAchse.number << "," << joystickYAchse.number << std::endl;
+
 	for (int i=0;i<30;i++)
 	{
 		int xAchse = 0;
@@ -160,7 +162,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << xAchse << "  ,  " << yAchse << std::endl;
+		std::cout << joystickXAchse.value << "  ,  " << joystickYAchse.value << std::endl;
 	}
 
 	return 0;
