@@ -127,6 +127,7 @@ void JoystickWerte()
 		{
 			yAchse = Event.value / 327;
 		}
+		printf("Event-Typ: %u Wert :%s\n", Event.type, Event.value);
 	}
 }
 
@@ -169,7 +170,6 @@ int main()
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
 		std::cout << xAchse << "  ,  " << yAchse << std::endl;
-		printf("Event-Typ: %u Wert :%s\n", Event.type, Event.value);
 
 		delay(500);
 	}
