@@ -42,7 +42,7 @@ public:
 	double get_leistungRadC() { return leistungRadC; }
 	double get_leistungRadD() { return leistungRadD; }
 	double get_langeLeistung() { return langeLeistung; }
-	double get_vektor1() { return vektor1; }
-	double get_vektor2() { return vektor2; }
+	double get_vektor1() { return Vektor1; }
+	double get_vektor2() { return Vektor2; }
 };
 #endif
