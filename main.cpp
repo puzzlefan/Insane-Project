@@ -47,6 +47,10 @@ engine MotorCDriveD;
 //Lenkung
 Lenkung LenkungCDrive;
 
+//Initiallisieren aller wichtigen Variablen
+int xAchse = 0;
+int yAchse = 0;
+int zAchse = 0;
 
 void SetUp()
 {
@@ -110,7 +114,7 @@ int fall()
 
 }
 
-void JoystickWerte(xAchse,yAchse)
+void JoystickWerte()
 {
 	if (joystick.sample(&Event) && Event.isAxis())
 	{
@@ -139,13 +143,8 @@ int main()
 
 	for (int i=0;i<100;i++)
 	{	
-		//Initiallisieren aller wichtigen Variablen
-		int xAchse = 0;
-		int yAchse = 0;
-		int zAchse = 0;
-
 		// Aktualisierung der Joystick Daten
-		JoystickWerte(xAchse,yAchse);
+		JoystickWerte();
 
 		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
 		switch(fall())
