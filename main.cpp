@@ -120,9 +120,24 @@ int main()
 
 	for (int i=0;i<30;i++)
 	{
-		int xAchse = int(joystickXAchse.value);//eig. Werte von Joystick
-		int yAchse = int(joystickYAchse.value);
+		int xAchse = 0;
+		int yAchse = 0;
 		int zAchse = 0;
+
+		if (joystick.sample(&joystickXAchse)){
+			xAchse = int(joystickXAchse.value)/327;
+		}
+		else {
+			xAchse = 1000;
+			std::cout << "X-Achse wurde nicht ausgelesen" << std::endl;
+		}
+
+		if (joystick.sample(&joystickYAchse == true)) {
+			yAchse = int(joystickYAchse.value)/327;}
+		else {
+			yAchse = 1000;
+			std::cout <<"Y-achse wurde nicht ausgelesen"
+		}
 
 		switch(fall())
 		{
