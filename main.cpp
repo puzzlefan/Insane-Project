@@ -164,6 +164,8 @@ int main()
 				break;
 		}
 
+		LenkungCDrive.normaleLenkung(xAchse, yAchse);
+
 		//Zuweisung der Leistungen den Motoren 
 		MotorA.set_power(LenkungCDrive.get_leistungRadA());
 		MotorB.set_power(LenkungCDrive.get_leistungRadB());
