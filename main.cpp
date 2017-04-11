@@ -132,7 +132,7 @@ int main()
 			std::cout << "X-Achse wurde nicht ausgelesen" << std::endl;
 		}
 
-		if (joystick.sample(&joystickYAchse == true)) {
+		if (joystick.sample(&joystickYAchse)) {
 			yAchse = int(joystickYAchse.value)/327;}
 		else {
 			yAchse = 1000;
