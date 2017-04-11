@@ -110,6 +110,22 @@ int fall()
 
 }
 
+void JoystickWerte()
+{
+	if (joystick.sample(&Event) && Event.isAxis())
+	{
+		if (Event.type == 2)
+		{
+			xAchse = Event.value / 327;
+		}
+
+		if (Event.type == 130)
+		{
+			yAchse = Event.value / 327;
+		}
+	}
+}
+
 
 int main()
 {
@@ -129,13 +145,7 @@ int main()
 		int zAchse = 0;
 
 		// Aktualisierung der Joystick Daten
-		if (joystick.sample(&Event))
-		{
-			if (Event.isAxis())
-			{
-				printf("Event-Typ:%u\n", Event.type);
-			}
-		}
+		JoystickWerte();
 
 		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
 		switch(fall())
@@ -159,7 +169,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		//std::cout << xAchse << "  ,  " << yAchse << std::endl;
+		std::cout << xAchse << "  ,  " << yAchse << std::endl;
 
 		delay(500);
 	}
