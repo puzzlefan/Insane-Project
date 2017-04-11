@@ -129,7 +129,7 @@ int main()
 		int zAchse = 0;
 
 		// Aktualisierung der Joystick Daten
-		if (joystick.sample(&Event)&&(Event.isButton()||Event.isAxis()))
+		if (joystick.sample(&Event)&&Event.isAxis())
 		{
 			printf("Event-Typ:%u\n", Event.type);
 			if (Event.isAxis()) { std::cout << "Achse" << std::endl; }
