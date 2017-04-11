@@ -128,8 +128,8 @@ int main()
 			xAchse = int(joystickXAchse.value)/327;
 		}
 		else {
-			if(joystickXAchse.isButton()){std:cout << "sieht Event als Button nicht (X-)Achse"<<std::endl}
-			if(joystickXAchse.isAxis()){std::cout << "sieht event als (X-)Achse"<<std::endl}
+			if (joystickXAchse.isButton()) { std:cout << "sieht Event als Button nicht (X-)Achse" << std::endl; }
+			if (joystickXAchse.isAxis()) { std::cout << "sieht event als (X-)Achse" << std::endl; }
 		}
 
 		if (joystick.sample(&joystickYAchse)) {
