@@ -120,7 +120,7 @@ int main()
 
 	std::cout << joystickXAchse.number << "," << joystickYAchse.number << std::endl;
 
-	for (int i=0;i<10;i++)
+	for (int i=0;i<100;i++)
 	{
 		int xAchse = 0;
 		int yAchse = 0;
@@ -163,6 +163,8 @@ int main()
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
 		std::cout << joystickXAchse.value << "  ,  " << joystickYAchse.value << std::endl;
+
+		delay(500);
 	}
 
 	return 0;
