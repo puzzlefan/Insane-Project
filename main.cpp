@@ -175,6 +175,8 @@ int main()
 		std::cout << xAchse << "  ,  " << yAchse << "  ;  " << LenkungCDrive.get_leistungRadA()<< std::endl;
 
 		delay(125);
+
+		if (i > 10) { break; }//Abbruchkriterium
 	}
 
 	return 0;
