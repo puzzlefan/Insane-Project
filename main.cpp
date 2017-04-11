@@ -174,7 +174,7 @@ int main()
 
 		std::cout << xAchse << "  ,  " << yAchse << "  ;  " << LenkungCDrive.get_langeleistung()<< std::endl;
 
-		delay(250);
+		delay(125);
 	}
 
 	return 0;
