@@ -129,11 +129,11 @@ int main()
 		int zAchse = 0;
 
 		// Aktualisierung der Joystick Daten
-		if (joystick.sample(&Event)&&(Event.isButton||Event.isAxis))
+		if (joystick.sample(&Event)&&(Event.isButton()||Event.isAxis()))
 		{
 			printf("Event-Typ:%u\n", Event.type);
-			if (Event.isAxis) { std::cout << "Achse" << std::endl; }
-			if (Event.isButton) { std::cout << "Knopf" << std::endl; }
+			if (Event.isAxis()) { std::cout << "Achse" << std::endl; }
+			if (Event.isButton()) { std::cout << "Knopf" << std::endl; }
 		}
 
 		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
