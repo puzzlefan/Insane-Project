@@ -17,8 +17,7 @@ Schnittstelle pin;
 
 //Joystick
 Joystick joystick("/dev/input/js0");
-JoystickEvent joystickXAchse;
-JoystickEvent joystickYAchse;
+JoystickEvent Event;
 
 //Ultraschallsensoren
 Sonar rvUltraschallsensor1;
@@ -116,31 +115,26 @@ int main()
 {
 	SetUp();
 
-	if (joystick.isFound() == false) { std::cout << "Joystick nicht da!" << std::endl; }
-
-	std::cout << joystickXAchse.number << "," << joystickYAchse.number << std::endl;
-
-	for (int i=0;i<100;i++)
+	if (joystick.isFound() == false)
 	{
+		std::cout << "Joystick nicht da!" << std::endl;
+		return 0;
+	}
+
+	for (int i=0;i<10;i++)
+	{	
+		//Initiallisieren aller wichtigen Variablen
 		int xAchse = 0;
 		int yAchse = 0;
 		int zAchse = 0;
 
-		if (joystick.sample(&joystickXAchse)){
-			xAchse = int(joystickXAchse.value)/327;
-		}
-		else {
-			if (joystickXAchse.isButton()) { std::cout << "sieht Event als Button nicht (X-)Achse" << std::endl; }
-			if (joystickXAchse.isAxis()) { std::cout << "sieht event als (X-)Achse" << std::endl; }
+		// Aktualisierung der Joystick Daten
+		if (joystick.sample(&Event)
+		{
+			std::cout << Event.number << std::endl;
 		}
 
-		if (joystick.sample(&joystickYAchse)) {
-			yAchse = int(joystickYAchse.value)/327;}
-		else {
-			if (joystickXAchse.isButton()) { std::cout << "sieht Event als Button nicht (Y-)Achse" << std::endl; }
-			if (joystickXAchse.isAxis()) { std::cout << "sieht event als (Y-)Achse" << std::endl; }
-		}
-
+		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
 		switch(fall())
 		{
 			case 0:LenkungCDrive.parken();
@@ -162,7 +156,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << xAchse << "  ,  " << yAchse << std::endl;
+		//std::cout << xAchse << "  ,  " << yAchse << std::endl;
 
 		delay(500);
 	}
