@@ -120,7 +120,7 @@ int main()
 
 	std::cout joystickXAchse.number << "," << joystickYAchse.number << std::endl;
 
-	for (int i=0;i<30;i++)
+	for (int i=0;i<10;i++)
 	{
 		int xAchse = 0;
 		int yAchse = 0;
