@@ -110,7 +110,7 @@ int fall()
 
 }
 
-void JoystickWerte()
+void JoystickWerte(xAchse,yAchse)
 {
 	if (joystick.sample(&Event) && Event.isAxis())
 	{
@@ -145,7 +145,7 @@ int main()
 		int zAchse = 0;
 
 		// Aktualisierung der Joystick Daten
-		JoystickWerte();
+		JoystickWerte(xAchse,yAchse);
 
 		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
 		switch(fall())
