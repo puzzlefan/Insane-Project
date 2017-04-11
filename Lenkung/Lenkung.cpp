@@ -2,6 +2,14 @@
 #include <Lenkung.h>
 #include <math.h>
 
+void Initialisieren()
+{
+	leistungRadA = 0;
+	leistungRadB = 0;
+	leistungRadC = 0;
+	leistungRadD = 0;
+}
+
 void Lenkung::berechnungWinkel (int xAchse, int yAchse)
 {
 	alpha = asin(yAchse / sqrt(xAchse*xAchse + yAchse*yAchse));

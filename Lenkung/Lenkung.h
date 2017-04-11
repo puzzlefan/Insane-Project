@@ -26,6 +26,9 @@ private:
 	double leistungRadD;//Rad links hinten
 
 public:
+	//SetUp Funktion
+	void Initialisieren();
+
 	//Berechnungen der einzelnen Längen etc. nur Klassen intern benötigt
 	void berechnungLange(int xAchse, int yAchse);
 	void berechnungWinkel(int xAchse, int yAchse);
