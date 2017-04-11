@@ -12,7 +12,7 @@ void Lenkung::berechnungWinkel (int xAchse, int yAchse)
 
 void Lenkung::berechnungLange(int xAchse, int yAchse)
 {	
-	if (xAchse&&yAchse^ != 0)
+	if (xAchse||yAchse != 0)
 	{
 		berechnungWinkel(xAchse, yAchse);
 
@@ -23,8 +23,8 @@ void Lenkung::berechnungLange(int xAchse, int yAchse)
 
 	else 
 	{
-		Vektor1 = 0;
-		Vektor2 = 0;
+		Vektor1 = xAchse;
+		Vektor2 = xAchse;
 	}
 }
 
@@ -41,8 +41,6 @@ void Lenkung::normaleLenkung(int xAchse, int yAchse)
 
 void Lenkung::driften(int xAchse, int yAchse)
 {
-	berechnungLange(xAchse, yAchse);
-
 	if (yAchse == 0) //seitwärts fahren; ansonsten keine Werte da yAchse = 0
 	{
 		leistungRadA += lamda*(xAchse-leistungRadA);
@@ -53,7 +51,9 @@ void Lenkung::driften(int xAchse, int yAchse)
 	}
 
 	else //"normales" driften
-	{
+	{	
+		berechnungLange(xAchse, yAchse);
+
 		leistungRadA += lamda*(Vektor1-leistungRadA);
 		leistungRadC += lamda*(Vektor1-leistungRadC);
 
