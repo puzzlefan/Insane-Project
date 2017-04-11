@@ -118,7 +118,7 @@ int main()
 
 	if (joystick.isFound() == false) { std::cout << "Joystick nicht da!" << std::endl; }
 
-	std::cout joystickXAchse.number << "," << joystickYAchse.number << std::endl;
+	std::cout << joystickXAchse.number << "," << joystickYAchse.number << std::endl;
 
 	for (int i=0;i<10;i++)
 	{
