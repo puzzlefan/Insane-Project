@@ -129,7 +129,7 @@ int main()
 		int zAchse = 0;
 
 		// Aktualisierung der Joystick Daten
-		if (joystick.sample(&Event)
+		if (joystick.sample(&Event))
 		{
 			std::cout << Event.number << std::endl;
 		}
