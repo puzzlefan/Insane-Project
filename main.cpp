@@ -162,7 +162,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << joystickXAchse.value << "  ,  " << joystickYAchse.value << std::endl;
+		std::cout << xAchse << "  ,  " << yAchse << std::endl;
 
 		delay(500);
 	}
