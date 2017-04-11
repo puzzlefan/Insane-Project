@@ -142,9 +142,11 @@ int main()
 		std::cout << "Joystick nicht da!" << std::endl;
 		return 0;
 	}
+	int i = 0;//nur provisorisch
 
-	for (int i=0;i<100;i++)
-	{	
+	while(true)
+	{
+		i++;//nur provisorisch als Abbruchkriterium
 		// Aktualisierung der Joystick Daten
 		JoystickWerte();
 
@@ -176,7 +178,7 @@ int main()
 
 		delay(125);
 
-		if (i > 10) { break; }//Abbruchkriterium
+		if (i > 100) { break; }//Abbruchkriterium
 	}
 
 	return 0;
