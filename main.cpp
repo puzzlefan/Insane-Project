@@ -131,7 +131,7 @@ int main()
 		// Aktualisierung der Joystick Daten
 		if (joystick.sample(&Event))
 		{
-			std::cout << Event.number << std::endl;
+			printf("Event-Typ:%u\n", Event.number);
 		}
 
 		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
