@@ -128,15 +128,15 @@ int main()
 			xAchse = int(joystickXAchse.value)/327;
 		}
 		else {
-			xAchse = 1000;
-			std::cout << "X-Achse wurde nicht ausgelesen" << std::endl;
+			if(joystickXAchse.isButton()){std:cout << "sieht Event als Button nicht (X-)Achse"<<std::endl}
+			if(joystickXAchse.isAxis()){std::cout << "sieht event als (X-)Achse"<<std::endl}
 		}
 
 		if (joystick.sample(&joystickYAchse)) {
 			yAchse = int(joystickYAchse.value)/327;}
 		else {
 			yAchse = 1000;
-			std::cout << "Y-achse wurde nicht ausgelesen" << std::endl;
+			//std::cout << "Y-achse wurde nicht ausgelesen" << std::endl;
 		}
 
 		switch(fall())
