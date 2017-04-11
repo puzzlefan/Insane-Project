@@ -172,7 +172,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << xAchse << "  ,  " << yAchse << "  ;  " << LenkungCDrive.get_leistungRadA()<< std::endl;
+		std::cout << xAchse << "  ,  " << yAchse << "  ;  " << LenkungCDrive.get_langeleistung()<< std::endl;
 
 		delay(250);
 	}
