@@ -136,7 +136,7 @@ int main()
 			yAchse = int(joystickYAchse.value)/327;}
 		else {
 			yAchse = 1000;
-			std::cout <<"Y-achse wurde nicht ausgelesen"
+			std::cout << "Y-achse wurde nicht ausgelesen" << std::endl;
 		}
 
 		switch(fall())
