@@ -13,8 +13,6 @@ private:
 	double lamda  = 0.5; //Faktor um faktorBremsen zu reduzieren
 		
 	//zu berechnende Werte 
-	double alpha;//Winkel alpha zwischen längeLeistung und X-Achse
-	double beta;//Winkel beta zwischen aktuellen Vektor und 45° vektor
 	double langeLeistung;//aktuelle Gesamtleistung
 	double Vektor1;// längeLeistung aufgeteit auf jeweise 2 Räder
 	double Vektor2;
@@ -28,7 +26,6 @@ private:
 public:
 	//Berechnungen der einzelnen Längen etc. nur Klassen intern benötigt
 	void berechnungLange(int xAchse, int yAchse);
-	void berechnungWinkel(int xAchse, int yAchse);
 	
 	//verschiedene Aufteilungen der Lestungen je nach Modi
 	void normaleLenkung(int xAchse, int yAchse);

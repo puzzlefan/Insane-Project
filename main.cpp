@@ -159,7 +159,7 @@ int main()
 				break;
 		
 			case 1:LenkungCDrive.normaleLenkung(xAchse, yAchse);
-				std::cout << "normale Lenkung" << std::endl;
+				//std::cout << "normale Lenkung" << std::endl;
 				break;
 
 			case 2:LenkungCDrive.driften(xAchse, yAchse);
@@ -177,9 +177,9 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << xAchse << "  ,  " << yAchse << "  ;  "  std::endl;
+		//std::cout << xAchse << "  ,  " << yAchse << "  ;  "  std::endl;
 
-		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2 << std::endl;
+		//std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2 << std::endl;
 
 		delay(75);
 

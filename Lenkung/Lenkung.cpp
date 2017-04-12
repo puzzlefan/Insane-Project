@@ -2,36 +2,12 @@
 #include <Lenkung.h>
 #include <math.h>
 
-void Lenkung::berechnungWinkel (int xAchse, int yAchse)
-{
-	alpha = asin(yAchse / sqrt(xAchse*xAchse + yAchse*yAchse));
-
-	beta = M_PI / 4 - alpha;
-	beta = fabs(beta);//Betrag nehmen
-}
 
 void Lenkung::berechnungLange(int xAchse, int yAchse)
 {	
-	if (xAchse||yAchse == 0)
-	{
-		Vektor1 = xAchse;
-		Vektor2 = xAchse;
-	}
-
-	else 
-	{
-		berechnungWinkel(xAchse, yAchse);
-
-		langeLeistung = sqrt(xAchse*xAchse + yAchse*yAchse);
-		Vektor1 = sin(beta)*langeLeistung;
-		Vektor2 = sqrt(langeLeistung*langeLeistung - Vektor1*Vektor1);
-
-		if (yAchse > 0)
-		{
-			Vektor1 *= -1;
-			Vektor2 *= -1;
-		}
-	}
+	Vektor1 = 1 / sqrt(2)*xAchse + 1 / sqrt(2)*yAchse;
+	Vektor2 = -1 / sqrt(2)*xAchse + 1 / sqrt(2)*yAchse;
+	std::cout << Vektor1 << "  ,   " << Vektor2 << std::endl;
 }
 
 void Lenkung::normaleLenkung(int xAchse, int yAchse)
