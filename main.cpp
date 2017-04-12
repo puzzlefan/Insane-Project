@@ -132,7 +132,7 @@ void JoystickWerte()
 		{
 			zAchse = Event.value / 327;
 		}
-		printf("Event-Typ: %u Wert", Event.type);
+		printf("Event-Typ: %u Wert", Event.number);
 		std::cout << Event.value << std::endl;
 	}
 }
@@ -181,7 +181,7 @@ int main()
 
 		std::cout << xAchse << "  ,  " << yAchse << "  ;  " << LenkungCDrive.get_leistungRadA()<< std::endl;
 
-		delay(125);
+		delay(75);
 
 		if (i > 100) { break; }//Abbruchkriterium
 	}
