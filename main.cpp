@@ -155,15 +155,19 @@ int main()
 		switch(fall())
 		{
 			case 0:LenkungCDrive.parken();
+				std::cout << "parken" << std::endl;
 				break;
 		
 			case 1:LenkungCDrive.normaleLenkung(xAchse, yAchse);
+				std::cout << "normale Lenkung" << std::endl;
 				break;
 
 			case 2:LenkungCDrive.driften(xAchse, yAchse);
+				std::cout << "driften" << std::endl;
 				break;
 
 			case 3:LenkungCDrive.drehen(zAchse);
+				std::cout << "drehen" << std::endl;
 				break;
 		}
 
@@ -173,7 +177,8 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << xAchse << "  ,  " << yAchse << "  ;  " << LenkungCDrive.get_leistungRadA()<< std::endl;
+		std::cout << xAchse << "  ,  " << yAchse << "  ;  "  std::endl;
+		std::cout << LenkungCDrive.get_leistungRadA << "   ,   " << LenkungCDrive.get_leistungRadB << "   ,   " << LenkungCDrive.get_leistungRadC << "   ,   " << LenkungCDrive.get_leistungRadD << std::endl;
 
 		delay(75);
 
