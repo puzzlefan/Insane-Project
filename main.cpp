@@ -132,8 +132,6 @@ void JoystickWerte()
 		{
 			zAchse = Event.value / 327;
 		}
-		printf("Event-Typ: %u Wert", Event.number);
-		std::cout << Event.value << std::endl;
 	}
 }
 
@@ -147,11 +145,9 @@ int main()
 		std::cout << "Joystick nicht da!" << std::endl;
 		return 0;
 	}
-	int i = 0;//nur provisorisch
 
 	while(true)
 	{
-		i++;//nur provisorisch als Abbruchkriterium
 		// Aktualisierung der Joystick Daten
 		JoystickWerte();
 
@@ -171,8 +167,6 @@ int main()
 				break;
 		}
 
-		LenkungCDrive.normaleLenkung(xAchse, yAchse);
-
 		//Zuweisung der Leistungen den Motoren 
 		MotorA.set_power(LenkungCDrive.get_leistungRadA());
 		MotorB.set_power(LenkungCDrive.get_leistungRadB());
@@ -183,7 +177,7 @@ int main()
 
 		delay(75);
 
-		if (i > 100) { break; }//Abbruchkriterium
+		if (int i > 100) { break; }//Abbruchkriterium
 	}
 
 	return 0;
