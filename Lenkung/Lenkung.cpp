@@ -12,7 +12,13 @@ void Lenkung::berechnungWinkel (int xAchse, int yAchse)
 
 void Lenkung::berechnungLange(int xAchse, int yAchse)
 {	
-	if (xAchse||yAchse != 0)
+	if (xAchse||yAchse == 0)
+	{
+		Vektor1 = xAchse;
+		Vektor2 = xAchse;
+	}
+
+	else 
 	{
 		berechnungWinkel(xAchse, yAchse);
 
@@ -20,17 +26,11 @@ void Lenkung::berechnungLange(int xAchse, int yAchse)
 		Vektor1 = sin(beta)*langeLeistung;
 		Vektor2 = sqrt(langeLeistung*langeLeistung + Vektor1*Vektor1);
 
-		if (yAchse < 0)
+		if (yAchse > 0)
 		{
 			Vektor1 *= -1;
 			Vektor2 *= -1;
 		}
-	}
-
-	else 
-	{
-		Vektor1 = xAchse;
-		Vektor2 = xAchse;
 	}
 }
 
