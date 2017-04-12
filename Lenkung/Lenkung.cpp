@@ -24,7 +24,7 @@ void Lenkung::berechnungLange(int xAchse, int yAchse)
 
 		langeLeistung = sqrt(xAchse*xAchse + yAchse*yAchse);
 		Vektor1 = sin(beta)*langeLeistung;
-		Vektor2 = sqrt(langeLeistung*langeLeistung + Vektor1*Vektor1);
+		Vektor2 = sqrt(langeLeistung*langeLeistung - Vektor1*Vektor1);
 
 		if (yAchse > 0)
 		{
