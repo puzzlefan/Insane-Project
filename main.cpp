@@ -118,14 +118,19 @@ void JoystickWerte()
 {
 	if (joystick.sample(&Event) && Event.isAxis())
 	{
-		if (Event.type == 2)
+		if (Event.number == 0)
 		{
 			xAchse = Event.value / 327;
 		}
 
-		if (Event.type == 130)
+		if (Event.number == 1)
 		{
 			yAchse = Event.value / 327;
+		}
+
+		if (Event.number == 2)
+		{
+			zAchse = Event.value / 327;
 		}
 		printf("Event-Typ: %u Wert", Event.type);
 		std::cout << Event.value << std::endl;
