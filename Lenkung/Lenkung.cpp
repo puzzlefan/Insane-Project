@@ -1,3 +1,4 @@
+#include <iostream>
 #include <InterfaceI2C.h>
 #include <Lenkung.h>
 #include <math.h>
@@ -5,10 +6,11 @@
 
 void Lenkung::berechnungLange(int xAchse, int yAchse)
 {	
-	double dxAchse = (double)xAchse;
-	Vektor1 = 1 / sqrt(2)*xAchse + 1 / sqrt(2)*yAchse;
-	Vektor2 = -1 / sqrt(2)*xAchse + 1 / sqrt(2)*yAchse;
-	std::cout << Vektor1 << "  ,   " << Vektor2 << std::endl;
+	double dxAchse = (double)xAchse;//wandelt Integerwerte in Double um, damit bei der Rechnung unterschiedliche Werte raus kommen
+	double dyAchse = (double)yAchse;
+
+	Vektor1 = 1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
+	Vektor2 = -1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
 }
 
 void Lenkung::normaleLenkung(int xAchse, int yAchse)
