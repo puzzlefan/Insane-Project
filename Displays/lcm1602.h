@@ -33,7 +33,6 @@
 
 #include <string>
 #include <vector>
-#include "lcm1602.h"
 
 namespace upm
 {
