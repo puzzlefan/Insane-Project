@@ -12,6 +12,11 @@ void Lenkung::berechnungLange(int xAchse, int yAchse)
 
 	Vektor1 = 1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
 	Vektor2 = -1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
+
+	if (Vektor1 > 100) { Vektor1 = 100; }
+	if (Vektor2 > 100) { Vektor2 = 100; }
+	if (Vektor1 < -100) { Vektor1 = -100; }
+	if (Vektor2 < -100) { Vektor2 = -100; }
 }
 
 void Lenkung::normaleLenkung(int xAchse, int yAchse)

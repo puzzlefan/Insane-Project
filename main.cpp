@@ -177,7 +177,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << xAchse << "  ,  " << yAchse <<  std::endl;
+		std::cout << xAchse << "  ,  " << yAchse*-1 << std::endl;
 		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
 
 		delay(75);
