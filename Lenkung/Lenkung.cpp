@@ -5,6 +5,7 @@
 
 void Lenkung::berechnungLange(int xAchse, int yAchse)
 {	
+	double dxAchse = (double)xAchse;
 	Vektor1 = 1 / sqrt(2)*xAchse + 1 / sqrt(2)*yAchse;
 	Vektor2 = -1 / sqrt(2)*xAchse + 1 / sqrt(2)*yAchse;
 	std::cout << Vektor1 << "  ,   " << Vektor2 << std::endl;
