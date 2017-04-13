@@ -8,6 +8,7 @@ void Lenkung::berechnungLange(int xAchse, int yAchse)
 {	
 	double dxAchse = (double)xAchse;//wandelt Integerwerte in Double um, damit bei der Rechnung unterschiedliche Werte raus kommen
 	double dyAchse = (double)yAchse;
+	dyAchse *= -1;//um Koordinatensystem des Joysticks auszugleichen
 
 	Vektor1 = 1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
 	Vektor2 = -1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
