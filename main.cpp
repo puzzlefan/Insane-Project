@@ -159,7 +159,7 @@ int main()
 				break;
 		
 			case 1:LenkungCDrive.normaleLenkung(xAchse, yAchse);
-				//std::cout << "normale Lenkung" << std::endl;
+				std::cout << "normale Lenkung" << std::endl;
 				break;
 
 			case 2:LenkungCDrive.driften(xAchse, yAchse);
@@ -179,11 +179,9 @@ int main()
 
 		//std::cout << xAchse << "  ,  " << yAchse << "  ;  "  std::endl;
 
-		//std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2 << std::endl;
+		//std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
 
 		delay(75);
-
-		if (int i > 100) { break; }//Abbruchkriterium
 	}
 
 	return 0;
