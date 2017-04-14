@@ -221,7 +221,7 @@ void manualOverwrite::express() {
 		lastPos = pos;
 	}
 }
-
+/*
 int main()
 {
 	manualOverwrite test(0);
@@ -258,5 +258,5 @@ int main()
 	}
 	cin.get();
 	return 0;
-}
+}*/
 
