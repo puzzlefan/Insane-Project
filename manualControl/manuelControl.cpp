@@ -221,7 +221,7 @@ void manualOverwrite::express() {
 		lastPos = pos;
 	}
 }
-/*
+/* damit mit main zusammen kompeliert wird habe ich es auskommentiert LG Beke
 int main()
 {
 	manualOverwrite test(0);
