@@ -1,173 +1,90 @@
+#include <stdio.h>
+#include <wiringPi.h>
+#include <wiringPiI2C.h>
+#include <string.h>
 
-/*
-* Author: Jon Trulson <jtrulson@ics.com>
-* Copyright (c) 2016 Intel Corporation.
-*
-* Based on UPM C++ drivers originally developed by:
-* Author: Daniel Mosquera
-* Copyright (c) 2013 Daniel Mosquera
-*
-* Author: Thomas Ingleby <thomas.c.ingleby@intel.com>
-* Copyright (c) 2014 Intel Corporation.
-*
-* Contributions: Sergey Kiselev <sergey.kiselev@intel.com>
-*
-* Permission is hereby granted, free of charge, to any person obtaining
-* a copy of this software and associated documentation files (the
-* "Software"), to deal in the Software without restriction, including
-* without limitation the rights to use, copy, modify, merge, publish,
-* distribute, sublicense, and/or sell copies of the Software, and to
-* permit persons to whom the Software is furnished to do so, subject to
-* the following conditions:
-*
-* The above copyright notice and this permission notice shall be
-* included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-* LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-* WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+int LCDAddr = 0x27;
+int BLEN = 1;
+int fd;
 
-#include <string>
-#include <stdexcept>
-#include <unistd.h>
-
-#include "lcm1602.h"
-
-using namespace upm;
-
-Lcm1602::Lcm1602(int bus_in, int addr_in, bool isExpander,
-	uint8_t numColumns, uint8_t numRows) :
-	m_lcm1602(lcm1602_i2c_init(bus_in, addr_in, isExpander, numColumns,
-		numRows))
-{
-	if (!m_lcm1602)
-		throw std::runtime_error(std::string(__FUNCTION__) +
-			": lcm1602_i2c_init failed");
+void write_word(int data) {
+	int temp = data;
+	if (BLEN == 1)
+		temp |= 0x08;
+	else
+		temp &= 0xF7;
+	wiringPiI2CWrite(fd, temp);
 }
 
-Lcm1602::Lcm1602(int rs, int enable, int d0,
-	int d1, int d2, int d3,
-	uint8_t numColumns, uint8_t numRows) :
-	m_lcm1602(lcm1602_gpio_init(rs, enable, d0, d1, d2, d3, numColumns,
-		numRows))
-{
-	if (!m_lcm1602)
-		throw std::runtime_error(std::string(__FUNCTION__) +
-			": lcm1602_gpio_init failed");
+void send_command(int comm) {
+	int buf;
+	// Send bit7-4 firstly
+	buf = comm & 0xF0;
+	buf |= 0x04; // RS = 0, RW = 0, EN = 1
+	write_word(buf);
+	delay(2);
+	buf &= 0xFB; // Make EN = 0
+	write_word(buf);
+
+	// Send bit3-0 secondly
+	buf = (comm & 0x0F) << 4;
+	buf |= 0x04; // RS = 0, RW = 0, EN = 1
+	write_word(buf);
+	delay(2);
+	buf &= 0xFB; // Make EN = 0
+	write_word(buf);
 }
 
-Lcm1602::~Lcm1602()
-{
-	lcm1602_close(m_lcm1602);
+void send_data(int data) {
+	int buf;
+	// Send bit7-4 firstly
+	buf = data & 0xF0;
+	buf |= 0x05; // RS = 1, RW = 0, EN = 1
+	write_word(buf);
+	delay(2);
+	buf &= 0xFB; // Make EN = 0
+	write_word(buf);
+
+	// Send bit3-0 secondly
+	buf = (data & 0x0F) << 4;
+	buf |= 0x05; // RS = 1, RW = 0, EN = 1
+	write_word(buf);
+	delay(2);
+	buf &= 0xFB; // Make EN = 0
+	write_word(buf);
 }
 
-upm_result_t Lcm1602::write(std::string msg)
-{
-	return lcm1602_write(m_lcm1602, (char *)msg.data(), msg.size());
+void init() {
+	send_command(0x33); // Must initialize to 8-line mode at first
+	delay(5);
+	send_command(0x32); // Then initialize to 4-line mode
+	delay(5);
+	send_command(0x28); // 2 Lines & 5*7 dots
+	delay(5);
+	send_command(0x0C); // Enable display without cursor
+	delay(5);
+	send_command(0x01); // Clear Screen
+	wiringPiI2CWrite(fd, 0x08);
 }
 
-upm_result_t Lcm1602::setCursor(int row, int column)
-{
-	return lcm1602_set_cursor(m_lcm1602, row, column);
+void clear() {
+	send_command(0x01); //clear Screen
 }
 
-upm_result_t Lcm1602::clear()
-{
-	return lcm1602_clear(m_lcm1602);
-}
+void write(int x, int y, char data[]) {
+	int addr, i;
+	int tmp;
+	if (x < 0) x = 0;
+	if (x > 15) x = 15;
+	if (y < 0) y = 0;
+	if (y > 1) y = 1;
 
-upm_result_t Lcm1602::home()
-{
-	return lcm1602_home(m_lcm1602);
-}
+	// Move cursor
+	addr = 0x80 + 0x40 * y + x;
+	send_command(addr);
 
-upm_result_t Lcm1602::createChar(uint8_t charSlot,
-	std::vector<uint8_t> charData)
-{
-	return lcm1602_create_char(m_lcm1602, charSlot, (char *)charData.data());
-}
-
-upm_result_t Lcm1602::displayOn()
-{
-	return lcm1602_display_on(m_lcm1602, true);
-}
-
-upm_result_t Lcm1602::displayOff()
-{
-	return lcm1602_display_on(m_lcm1602, false);
-}
-
-upm_result_t Lcm1602::cursorOn()
-{
-	return lcm1602_cursor_on(m_lcm1602, true);
-}
-
-upm_result_t Lcm1602::cursorOff()
-{
-	return lcm1602_cursor_on(m_lcm1602, false);
-}
-
-upm_result_t Lcm1602::cursorBlinkOn()
-{
-	return lcm1602_cursor_blink_on(m_lcm1602, true);
-}
-
-upm_result_t Lcm1602::cursorBlinkOff()
-{
-	return lcm1602_cursor_blink_on(m_lcm1602, false);
-}
-
-upm_result_t Lcm1602::backlightOn()
-{
-	return lcm1602_backlight_on(m_lcm1602, true);
-}
-
-upm_result_t Lcm1602::backlightOff()
-{
-	return lcm1602_backlight_on(m_lcm1602, false);
-}
-
-upm_result_t Lcm1602::scrollDisplayLeft()
-{
-	return lcm1602_scroll_display_left(m_lcm1602);
-}
-
-upm_result_t Lcm1602::scrollDisplayRight()
-{
-	return lcm1602_scroll_display_right(m_lcm1602);
-}
-
-upm_result_t Lcm1602::entryLeftToRight()
-{
-	return lcm1602_entry_left_to_right(m_lcm1602, true);
-}
-
-upm_result_t Lcm1602::entryRightToLeft()
-{
-	return lcm1602_entry_left_to_right(m_lcm1602, false);
-}
-
-upm_result_t Lcm1602::autoscrollOn()
-{
-	return lcm1602_autoscroll_on(m_lcm1602, true);
-}
-
-upm_result_t Lcm1602::autoscrollOff()
-{
-	return lcm1602_autoscroll_on(m_lcm1602, false);
-}
-
-upm_result_t Lcm1602::command(uint8_t cmd)
-{
-	return lcm1602_command(m_lcm1602, cmd);
-}
-
-upm_result_t Lcm1602::data(uint8_t data)
-{
-	return lcm1602_data(m_lcm1602, data);
+	tmp = strlen(data);
+	for (i = 0; i < tmp; i++) {
+		send_data(data[i]);
+	}
 }
