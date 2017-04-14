@@ -9,8 +9,10 @@
 #include <libSonar.h>
 #include <InterfaceI2C.h> // Schnittstelle
 #include <Lenkung.h> //Generelle Steuerung
+#include <manuelControl.h>
+#include <switching.h>//zum feststellen der C-Module
 #include <engine.h> // Klasse um Daten an Motoren weiter zu geben
-#include <lcm1602.h>
+#include <lcm1602.h>//Klasse für Displays
 
 // Erstellen einzelen Objekte aus den Klassen
   
@@ -56,6 +58,8 @@ LCM lcm;
 int xAchse = 0;
 int yAchse = 0;
 int zAchse = 0;
+bool cModule = false;
+
 
 void SetUp()
 {
@@ -100,6 +104,41 @@ void SetUp()
 	lcm.clear();
 }
 
+
+void JoystickWerte()
+{
+	if (joystick.sample(&Event) && Event.isAxis())//Auslesen des Joysticks fürs normale Fahren,Driften und Drehen
+	{
+		if (Event.number == 0)
+		{
+			xAchse = Event.value / 327;
+		}
+
+		if (Event.number == 1)
+		{
+			yAchse = Event.value / 327;
+		}
+
+		if (Event.number == 2)
+		{
+			zAchse = Event.value / 327;
+		}
+	}
+
+	if(joystick.sample(&Event)&&Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren über die C-Module
+	{
+		if(Event.number == 3)
+		{
+			cModule = true;
+		}
+	}
+	else
+	{
+		cModule = false;
+	}
+}
+
+
 int fall()
 {
 	if (pin.WerteLesen(pin.get_Parken()) == 1)
@@ -118,31 +157,17 @@ int fall()
 			return 3;
 		}
 		
-		//if (c-button gedrückt) {return 4;}
+		if (cModule = true) 
+		{
+			return 4;
+		}
+
+		if (pin.WerteLesen(pin.get_manuelleSteuerung()) == 1)
+		{
+			return 5;
+		}
 
 		return 2;
-	}
-
-}
-
-void JoystickWerte()
-{
-	if (joystick.sample(&Event) && Event.isAxis())
-	{
-		if (Event.number == 0)
-		{
-			xAchse = Event.value / 327;
-		}
-
-		if (Event.number == 1)
-		{
-			yAchse = Event.value / 327;
-		}
-
-		if (Event.number == 2)
-		{
-			zAchse = Event.value / 327;
-		}
 	}
 }
 
@@ -209,6 +234,26 @@ int main()
 				lcm.write(0, 0, "Fahrtmodus:");
 				lcm.write(5, 1, "Drehen");
 				
+				break;
+			
+			case 4:
+				//C-Klasse
+
+				lcm.clear();
+
+				lcm.write(0, 0, "Fahrtmodus:");
+				lcm.write(3, 1, "Hochfahren");
+
+				break;
+			
+			case 5:
+				//manuelle Steuerung
+
+				lcm.clear();
+
+				lcm.write(0, 0, "Fahrtmodus:");
+				lcm.write(4, 1, "manuell");
+
 				break;
 		}
 
