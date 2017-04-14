@@ -1,6 +1,7 @@
 #include <iostream>  //Grund-Funktionen
 #include <math.h>
 #include <wiringPi.h>
+#include <wiringPiI2C.h>
 #include <mcp23017.h>
 #include <softPwm.h>
 #include <joystick.hh> //Klassen zur Verarbeitung von Sensordaten
@@ -9,11 +10,12 @@
 #include <InterfaceI2C.h> // Schnittstelle
 #include <Lenkung.h> //Generelle Steuerung
 #include <engine.h> // Klasse um Daten an Motoren weiter zu geben
+#include <lcm1602.h>
 
 // Erstellen einzelen Objekte aus den Klassen
-
+  
 //Schnittstellen
-Schnittstelle pin;
+Schnittstelle pin; 
 
 //Joystick
 Joystick joystick("/dev/input/js0");
@@ -46,6 +48,9 @@ engine MotorCDriveD;
 
 //Lenkung
 Lenkung LenkungCDrive;
+
+//Displays
+LCM lcm;
 
 //Initiallisieren aller wichtigen Variablen
 int xAchse = 0;
@@ -86,7 +91,13 @@ void SetUp()
 	MotorCDriveC.initialisEngine(pin.get_cRadCf(), pin.get_cRadCb());
 	MotorCDriveD.initialisEngine(pin.get_cRadDf(), pin.get_cRadDb());
 
-	std::cout << "SetUp vollständig" << std::endl;
+	//"Output" auf Display
+	lcm.write(1, 0, "SetUp fertig!");
+	lcm.write(2, 1, "Gute Fahrt!");
+
+	delay(3000);
+	
+	lcm.clear();
 }
 
 int fall()
@@ -142,7 +153,13 @@ int main()
 
 	if (joystick.isFound() == false)
 	{
-		std::cout << "Joystick nicht da!" << std::endl;
+		lcm.write(1, 0, "Kein Joystick!");
+		lcm.write(2, 1, "Keine Fahrt");
+		
+		delay(5000);
+		
+		lcm.clear();
+		
 		return 0;
 	}
 
@@ -154,20 +171,44 @@ int main()
 		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
 		switch(fall())
 		{
-			case 0:LenkungCDrive.parken();
-				std::cout << "parken" << std::endl;
+			case 0:
+				LenkungCDrive.parken();
+				
+				lcm.clear();
+
+				lcm.write(0, 0, "Fahrtmodus:");
+				lcm.write(5, 1, "Parken");
+				
 				break;
 		
-			case 1:LenkungCDrive.normaleLenkung(xAchse, yAchse);
-				std::cout << "normale Lenkung" << std::endl;
+			case 1:
+				LenkungCDrive.normaleLenkung(xAchse, yAchse);
+				
+				lcm.clear();
+
+				lcm.write(0, 0, "Fahrtmodus:");
+				lcm.write(4, 1, "normales Fahren");
+				
 				break;
 
-			case 2:LenkungCDrive.driften(xAchse, yAchse);
-				std::cout << "driften" << std::endl;
+			case 2:
+				LenkungCDrive.driften(xAchse, yAchse);
+				
+				lcm.clear();
+				
+				lcm.write(0, 0, "Fahrtmodus:");
+				lcm.write(4, 1, "Driften");
+				
 				break;
 
-			case 3:LenkungCDrive.drehen(zAchse);
-				std::cout << "drehen" << std::endl;
+			case 3:
+				LenkungCDrive.drehen(zAchse);
+				
+				lcm.clear();
+
+				lcm.write(0, 0, "Fahrtmodus:");
+				lcm.write(5, 1, "Drehen");
+				
 				break;
 		}
 
@@ -177,7 +218,7 @@ int main()
 		MotorC.set_power(LenkungCDrive.get_leistungRadC());
 		MotorD.set_power(LenkungCDrive.get_leistungRadD());
 
-		std::cout << xAchse << "  ,  " << yAchse*-1 << std::endl;
+		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
 		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
 
 		delay(75);

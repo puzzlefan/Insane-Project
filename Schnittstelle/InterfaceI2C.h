@@ -42,6 +42,7 @@ private:
 	int Parken = 200 + 8;
 	int fahrtModiNormalesFahren = 200 + 9;
 	int fahrtModiDrehen = 200 + 10;
+	int manuelleSteuerung = 200 + 11;
 
 	//Variablen für die Motoren; geben die PinNr. an
 	int RadAf = 7;
@@ -105,6 +106,7 @@ public:
 	int get_Parken() { return Parken; }
 	int get_fahrtModiNormalesFahren() { return fahrtModiNormalesFahren; }
 	int get_fahrtModiDrehen() { return fahrtModiDrehen; }
+	int get_manuelleSteuerung() { return manuelleSteuerung; }
 
 	int get_RadAf() { return RadAf; }
 	int get_RadAb() { return RadAb; }

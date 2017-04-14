@@ -14,6 +14,7 @@ void Schnittstelle::InterfaceSetUp()
 	pinMode(Parken, INPUT);
 	pinMode(fahrtModiNormalesFahren, INPUT);
 	pinMode(fahrtModiDrehen, INPUT);
+	pinMode(manuelleSteuerung, INPUT);
 }
 
 void Schnittstelle::WerteSchreiben(int pin, int Wert)
