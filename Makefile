@@ -4,7 +4,7 @@ DIRS = Schnittstelle Lenkung Ultrasonic... Joystick engine Displays switchig man
 
 all:
 	for i in $(DIRS); do make -C $$i all; done
-	$(CXX) $(CXXFLAGS) -ILenkung -IUltrasonic... -ISchnittstelle -IJoystick -IDisplays -Iengine -o main main.cpp \
+	$(CXX) $(CXXFLAGS) -ILenkung -IUltrasonic... -ISchnittstelle -IJoystick -IDisplays -Iengine -ImanualControl -Iswitchig -o main main.cpp \
 	Lenkung/*.o \
 	Schnittstelle/*.o \
 	Joystick/*.o \

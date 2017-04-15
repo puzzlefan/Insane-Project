@@ -2,7 +2,7 @@
 #include <math.h>
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
-#include <mcp23017.h>
+#include <mcp23017.h> 
 #include <softPwm.h>
 #include <joystick.hh> //Klassen zur Verarbeitung von Sensordaten
 //#include <Rotationssensor.h>
@@ -43,13 +43,18 @@ engine MotorA;
 engine MotorB;
 engine MotorC;
 engine MotorD;
-engine MotorCDriveA;
-engine MotorCDriveB;
-engine MotorCDriveC;
-engine MotorCDriveD;
+
+//switching
+switching CDriveA(pin.get_cRadAf(), pin.get_cRadAb());
+switching CDriveB(pin.get_cRadBf(), pin.get_cRadBb());
+switching CDriveC(pin.get_cRadCf(), pin.get_cRadCb());
+switching CDriveD(pin.get_cRadDf(), pin.get_cRadDb());
 
 //Lenkung
 Lenkung LenkungCDrive;
+
+//manuelle Lenkung
+manualOverwrite mSteuerung(0x27);
 
 //Displays
 LCM lcm;
@@ -90,10 +95,6 @@ void SetUp()
 	MotorB.initialisEngine(pin.get_RadBf(), pin.get_RadBb());
 	MotorC.initialisEngine(pin.get_RadCf(), pin.get_RadCb());
 	MotorD.initialisEngine(pin.get_RadDf(), pin.get_RadDb());
-	MotorCDriveA.initialisEngine(pin.get_cRadAf(), pin.get_cRadAb());
-	MotorCDriveB.initialisEngine(pin.get_cRadBf(), pin.get_cRadBb());
-	MotorCDriveC.initialisEngine(pin.get_cRadCf(), pin.get_cRadCb());
-	MotorCDriveD.initialisEngine(pin.get_cRadDf(), pin.get_cRadDb());
 
 	//"Output" auf Display
 	lcm.write(1, 0, "SetUp fertig!");
@@ -127,7 +128,7 @@ void JoystickWerte()
 
 	if(joystick.sample(&Event)&&Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren über die C-Module
 	{
-		if(Event.number == 3)
+		if(Event.number == 3 && Event.value == 1)
 		{
 			cModule = true;
 		}
@@ -157,7 +158,7 @@ int fall()
 			return 3;
 		}
 		
-		if (cModule = true) 
+		if (cModule == true) 
 		{
 			return 4;
 		}
@@ -248,12 +249,6 @@ int main()
 			
 			case 5:
 				//manuelle Steuerung
-
-				lcm.clear();
-
-				lcm.write(0, 0, "Fahrtmodus:");
-				lcm.write(4, 1, "manuell");
-
 				break;
 		}
 
