@@ -1,15 +1,27 @@
-#pragma once
 #ifndef InterfaceI2C_H
 #define InterfaceI2C_H
 
 #include <wiringPi.h>
 #include <mcp23017.h>
 
-class Schnittstelle 
+class Schnittstelle
 {
 private:
-	
-	// Variablen für die einzelnen Sensoren; geben die PinNr. an
+	//NEW
+
+	int AdresseRotationsArduino = 0x03;
+	int ConnectionToken;
+
+	int RegMaxStep = 0;
+	int RegStepsLV = 2;//Register Schritte links vorne
+	int RegRevsLV = 3;//Register Umdrehungne links vorne
+	int RegStepsRV = 4;//...
+	int RegRevsRV = 5;
+	int RegStepsLH = 6;
+	int RegRevsLH = 7;
+	int RegStepsRH = 8;
+	int RegRevsRH = 9;
+	// Variablen fÃ¼r die einzelnen Sensoren; geben die PinNr. an
 	int rvUltraschallsensorEcho1 = 100 + 8;
 	int rvUltraschallsensorEcho2 = 100 + 9;
 	int rvUltraschallsensorEcho3 = 100 + 10;
@@ -38,26 +50,26 @@ private:
 	int lhUltraschallsensorTrigger2 = 300 + 3;
 	int lhUltraschallsensorTrigger3 = 300 + 2;
 
-	//Variablen für die Schalter; geben die PinNr. an
+	//Variablen fÃ¼r die Schalter; geben die PinNr. an
 	int Parken = 200 + 8;
 	int fahrtModiNormalesFahren = 200 + 9;
 	int fahrtModiDrehen = 200 + 10;
 	int manuelleSteuerung = 200 + 11;
 
-	//Variablen für die Motoren; geben die PinNr. an
+	//Variablen fÃ¼r die Motoren; geben die PinNr. an
 	int RadAf = 7;
 	int RadAb = 0;
-	
+
 	int RadBf = 2;
 	int RadBb = 3;
-	
+
 	int RadCf = 23;
 	int RadCb = 24;
-	
+
 	int RadDf = 21;
 	int RadDb = 22;
 
-	//Variablen für die Motoren am C-Modul; geben die PinNr.an
+	//Variablen fÃ¼r die Motoren am C-Modul; geben die PinNr.an
 	int cRadAf = 25;
 	int cRadAb = 1;
 
@@ -74,14 +86,39 @@ public:
 	void InterfaceSetUp();
 	void WerteSchreiben(int pin, int Wert);
 	int WerteLesen(int pin);
-		
+
+	//
+	//NEU
+	//
+	void I2C8Write(int token, int Register, int Wert);
+	void I2C16Write(int token, int Register, int Wert);
+	int I2C8Read(int token, int Register);
+	int I2C16Read(int token, int Register);
+
+	int get_AdrRotationsArduino() { return AdresseRotationsArduino; }
+	int get_connectionToken() { return ConnectionToken; }
+
+	int get_RegMaxSteps() { return RegMaxStep; }
+	int get_RegStepsLV() { return RegStepsLV; }
+	int get_RegRevsLV() { return RegRevsLV; }
+	int get_RegStepsRV() { return RegStepsRV; }
+	int get_RegRevsRV() { return RegRevsRV; }
+	int get_RegStepsLH() { return RegStepsLH; }
+	int get_RegRevsLH() { return RegRevsLH; }
+	int get_RegStepsRH() { return RegStepsRH; }
+	int get_RegRevsRH() { return RegRevsRH; }
+
+	//
+	//ALT
+	//
+
 	int get_rvUltraschallsensorEcho1() { return rvUltraschallsensorEcho1; }
 	int get_rvUltraschallsensorEcho2() { return rvUltraschallsensorEcho2; }
 	int get_rvUltraschallsensorEcho3() { return rvUltraschallsensorEcho3; }
 	int get_lvUltraschallsensorEcho1() { return lvUltraschallsensorEcho1; }
 	int get_lvUltraschallsensorEcho2() { return lvUltraschallsensorEcho2; }
 	int get_lvUltraschallsensorEcho3() { return lvUltraschallsensorEcho3; }
-	
+
 	int get_rvUltraschallsensorTrigger1() { return rvUltraschallsensorTrigger1; }
 	int get_rvUltraschallsensorTrigger2() { return rvUltraschallsensorTrigger2; }
 	int get_rvUltraschallsensorTrigger3() { return rvUltraschallsensorTrigger3; }
