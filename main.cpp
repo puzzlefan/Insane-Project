@@ -12,7 +12,7 @@
 #include <manuelControl.h>
 #include <switching.h>//zum feststellen der C-Module
 #include <engine.h> // Klasse um Daten an Motoren weiter zu geben
-#include <lcm1602.h>//Klasse für Displays
+#include <lcm1602.h>//Klasse fÃ¼r Displays
 
 // Erstellen einzelen Objekte aus den Klassen
   
@@ -110,42 +110,44 @@ void SetUp()
 
 void JoystickWerte()
 {
-	if (joystick.sample(&Event) && Event.isAxis())//Auslesen des Joysticks fürs normale Fahren,Driften und Drehen
-	{
-		switch (Event.number)
+	if (joystick.sample(&Event)){
+		if(Event.isAxis())//Auslesen des Joysticks fÃ¼rs normale Fahren,Driften und Drehen
 		{
-			case 0:
-				xAchse = Event.value / 327;
-				break;
-			
-			case 1:
-				yAchse = Event.value / 327;
-				break;
-
-			case 2:
-				zAchse = Event.value / 327;
-				break;
-
-			case 4:
-				DLR = Event.value;
-				break;
-
-			case 5:
-				DTB = Event.value;
-				break;
+			switch (Event.number)
+			{
+				case 0:
+					xAchse = Event.value / 327;
+					break;
+				
+				case 1:
+					yAchse = Event.value / 327;
+					break;
+	
+				case 2:
+					zAchse = Event.value / 327;
+					break;
+	
+				case 4:
+					DLR = Event.value;
+					break;
+	
+				case 5:
+					DTB = Event.value;
+					break;
+			}
 		}
-	}
-
-	if(joystick.sample(&Event)&&Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren über die C-Module
-	{
-		if(Event.number == 3 && Event.value == 1)
+	
+		if(Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren Ã¼ber die C-Module
 		{
-			cModule = true;
+			if(Event.number == 3 && Event.value == 1)
+			{
+				cModule = true;
+			}
 		}
-	}
-	else
-	{
-		cModule = false;
+		else
+		{
+			cModule = false;
+		}
 	}
 }
 
@@ -204,7 +206,7 @@ int main()
 		// Aktualisierung der Joystick Daten
 		JoystickWerte();
 
-		//Zuweisung welcher Typ von Fortbewegung gerade "zuständig" ist
+		//Zuweisung welcher Typ von Fortbewegung gerade "zustÃ¤ndig" ist
 		switch(fall())
 		{
 			case 0:
