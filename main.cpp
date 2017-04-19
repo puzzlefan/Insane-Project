@@ -63,6 +63,8 @@ LCM lcm;
 int xAchse = 0;
 int yAchse = 0;
 int zAchse = 0;
+int DLR = 0;
+int DTB = 0;
 bool cModule = false;
 
 
@@ -110,19 +112,27 @@ void JoystickWerte()
 {
 	if (joystick.sample(&Event) && Event.isAxis())//Auslesen des Joysticks fürs normale Fahren,Driften und Drehen
 	{
-		if (Event.number == 0)
+		switch (Event.number)
 		{
-			xAchse = Event.value / 327;
-		}
+			case 0:
+				xAchse = Event.value / 327;
+				break;
+			
+			case 1:
+				yAchse = Event.value / 327;
+				break;
 
-		if (Event.number == 1)
-		{
-			yAchse = Event.value / 327;
-		}
+			case 2:
+				zAchse = Event.value / 327;
+				break;
 
-		if (Event.number == 2)
-		{
-			zAchse = Event.value / 327;
+			case 4:
+				DLR = Event.value;
+				break;
+
+			case 5:
+				DTB = Event.value;
+				break;
 		}
 	}
 
@@ -238,7 +248,7 @@ int main()
 				break;
 			
 			case 4:
-				//C-Klasse
+				//C-Klasse aufrufe
 
 				lcm.clear();
 
@@ -248,16 +258,33 @@ int main()
 				break;
 			
 			case 5:
-				//manuelle Steuerung
+				mSteuerung.renewNavVar(DLR, DBT, xAchse);
+				mSteuerung.navigate();
+				mSteuerung.express();
+
+				lcm.clear();
+
+				//lcm.write(0, 0, mSterueung.Was auch immer hier Stehen soll);
+				//lcm.write(0, 1, );
+
 				break;
 		}
 
 		//Zuweisung der Leistungen den Motoren 
-		MotorA.set_power(LenkungCDrive.get_leistungRadA());
-		MotorB.set_power(LenkungCDrive.get_leistungRadB());
-		MotorC.set_power(LenkungCDrive.get_leistungRadC());
-		MotorD.set_power(LenkungCDrive.get_leistungRadD());
-
+		switch (fall())
+		{
+			case 4:
+				//c-klasse motoren zuweisung
+				break;
+			
+			default:
+				MotorA.set_power(LenkungCDrive.get_leistungRadA());
+				MotorB.set_power(LenkungCDrive.get_leistungRadB());
+				MotorC.set_power(LenkungCDrive.get_leistungRadC());
+				MotorD.set_power(LenkungCDrive.get_leistungRadD());
+				break;		
+		}
+		
 		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
 		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
 
