@@ -276,6 +276,10 @@ int main()
 			case 4:
 				//c-klasse motoren zuweisung
 				break;
+
+			case 5:
+				//manualControl zuweisung
+				break;
 			
 			default:
 				MotorA.set_power(LenkungCDrive.get_leistungRadA());
