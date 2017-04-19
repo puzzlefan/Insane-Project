@@ -258,7 +258,7 @@ int main()
 				break;
 			
 			case 5:
-				mSteuerung.renewNavVar(DLR, DBT, xAchse);
+				mSteuerung.renewNavVar(DLR, DTB, xAchse);
 				mSteuerung.navigate();
 				mSteuerung.express();
 
