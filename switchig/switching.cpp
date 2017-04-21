@@ -4,32 +4,21 @@
 #include "switching.h"
 #include <unistd.h>
 #include <wiringPi.h>
+#include "../engine/engine.h"
 
 
-
-switching::switching(int forwardP, int backwardP)
+switching::switching(engine ** motor)
 {
 	//copys the local variables to their global counter part
-	fwd = forwardP;
-	bwd = backwardP;
-	//contactPin = contactP; also just in use as you would have a wax to check the position
-	//initialises the engine pins
-	pinMode(fwd, OUTPUT);
-	pinMode(bwd, OUTPUT);
-	//pinMode(contactPin, INPUP);//same
-	//make sure the engine is turned off
-	digitalWrite(fwd, LOW);
-	digitalWrite(bwd, LOW);
+	modor = *motor;
 }
 void switching::up() {
-	digitalWrite(fwd,HIGH);
+	modor->set_power(100);
 	usleep(movingTime);
-	digitalWrite(fwd, LOW);
+	modor->set_power(0);
 }
 void switching::down() {
-	digitalWrite(bwd, HIGH);
+	modor->set_power(-100);
 	usleep(movingTime);
-	digitalWrite(bwd, LOW);
+	modor->set_power(0);
 }
-
-
