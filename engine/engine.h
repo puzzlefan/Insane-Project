@@ -2,7 +2,7 @@
 #include <wiringPi.h>
 #include <softPwm.h>
 
-//BREMSEN MÜSSEN EINGEBAUT WERDEN
+//BREMSEN Mï¿½SSEN EINGEBAUT WERDEN
 
 class engine
 {
