@@ -2,7 +2,7 @@
 #ifndef Lenkung_H
 #define Lenkung_H
 
-#include <InterfaceI2C.h>
+#include "../Schnittstelle/InterfaceI2C.h"
 #include <math.h>
 
 class Lenkung 
@@ -14,7 +14,7 @@ private:
 		
 	//zu berechnende Werte 
 	double langeLeistung;//aktuelle Gesamtleistung
-	double Vektor1;// längeLeistung aufgeteit auf jeweise 2 Räder
+	double Vektor1;// lï¿½ngeLeistung aufgeteit auf jeweise 2 Rï¿½der
 	double Vektor2;
 	
 	// Ergebnisse
@@ -24,7 +24,7 @@ private:
 	double leistungRadD;//Rad links hinten
 
 public:
-	//Berechnungen der einzelnen Längen etc. nur Klassen intern benötigt
+	//Berechnungen der einzelnen Lï¿½ngen etc. nur Klassen intern benï¿½tigt
 	void berechnungLange(int xAchse, int yAchse);
 	
 	//verschiedene Aufteilungen der Lestungen je nach Modi
