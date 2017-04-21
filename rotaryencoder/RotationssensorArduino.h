@@ -1,4 +1,6 @@
-#include "InterfaceI2C.h"
+#ifndef RotationssensorArduino_H
+#define	RotationssensorArduino_H
+#include "../Schnittstelle/InterfaceI2C.h"
 class Rotationssensor
 {
 private:
@@ -9,7 +11,7 @@ private:
 	int Steps;
 	int Revs;
 	int acTime;
-	int last[10][3] = { { 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) },{ 0,0,time(0) } };
+	int last[10][2] = { { 0,0 },{ 0,0 },{ 0,0 },{ 0,0 },{ 0,0 },{ 0,0 },{ 0,0 },{ 0,0 },{ 0,0 },{ 0,0 } };
 
 	double d = 0.225;//mesuret in meter
 public:
@@ -33,3 +35,5 @@ public:
 
 	void resetSteps(int reg);
 };
+
+#endif
