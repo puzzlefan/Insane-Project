@@ -1,39 +1,8 @@
 #include "RotationssensorArduino.h"
-#include "InterfaceI2C.h"
+#include "../Schnittstelle/InterfaceI2C.h"
 #include "time.h"
 #define _USE_MATH_DEFINES
 #include "math.h"
-#include <cmath>
-/*
-#include <iostream>
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
-
-int fd;
-
-void bla(int i) {
-if ((fd = wiringPiI2CSetup(0x03))<0) {//Seems to open the needet i2c Channel for wiring pi
-printf("error opening i2c channel\n\r");
-}
-wiringPiI2CWriteReg8(fd, 0, i);//turns the off off
-}
-
-void ProofRegister(int registere) {
-std::cout << "Adresse " << "adress" << " Register " << registere << " Wert " <</* std::bitset<16>*//*(wiringPiI2CReadReg8(fd, 0)) << " " << std::endl << std::flush;
-}
-
-
-int main() {
-int i = 0;
-for (;;) {
-std::cin >> i;
-bla(i);
-ProofRegister(i);
-//if(i==0xff) i = 0;
-}
-return 0;
-}
-*/
 
 Rotationssensor::Rotationssensor(int RegSteps, int RegRevs, Schnittstelle ** Intercom)
 {
@@ -53,11 +22,11 @@ void Rotationssensor::read()
 		for (int i = 9; i > 0; i--) {
 			last[i][0] = last[i - 1][0];
 			last[i][1] = last[i - 1][1];
-			last[i][2] = last[i - 1][2];
+//			last[i][2] = last[i - 1][2];
 		}
 		last[0][0] = Steps;
 		last[0][1] = Revs;
-		last[0][2] = acTime;
+//		last[0][2] = acTime;
 	}
 }
 
