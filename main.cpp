@@ -2,67 +2,86 @@
 #include <math.h>
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
-#include <mcp23017.h> 
+#include <mcp23017.h>
 #include <softPwm.h>
-#include <joystick.hh> //Klassen zur Verarbeitung von Sensordaten
-//#include <Rotationssensor.h>
-#include <libSonar.h>
-#include <InterfaceI2C.h> // Schnittstelle
-#include <Lenkung.h> //Generelle Steuerung
-#include <manuelControl.h>
-#include <switching.h>//zum feststellen der C-Module
-#include <engine.h> // Klasse um Daten an Motoren weiter zu geben
-#include <lcm1602.h>//Klasse für Displays
+#include "rotaryencoder/RotationssensorArduino.h"
+#include "Joystick/joystick.hh" //Klassen zur Verarbeitung von Sensordaten
+#include "Ultrasonic/libSonar.h"
+#include "Schnittstelle/InterfaceI2C.h" // Schnittstelle
+#include "Lenkung/Lenkung.h" //Generelle Steuerung
+#include "manualControl/manuelControl.h"
+#include "switchig/switching.h"//zum feststellen der C-Module
+#include "engine/engine.h" // Klasse um Daten an Motoren weiter zu geben
+#include "Displays/lcm1602.h"//Klasse fuer Displays
+#include "C/C.h"
+
 
 // Erstellen einzelen Objekte aus den Klassen
   
 //Schnittstellen
-Schnittstelle pin; 
+Schnittstelle * pin = new Schnittstelle; 
 
 //Joystick
 Joystick joystick("/dev/input/js0");
 JoystickEvent Event;
 
 //Ultraschallsensoren
-Sonar rvUltraschallsensor1;
-Sonar rvUltraschallsensor2;
-Sonar rvUltraschallsensor3;
-Sonar lvUltraschallsensor1;
-Sonar lvUltraschallsensor2;
-Sonar lvUltraschallsensor3;
+Sonar * rvUltraschallsensor1 = new Sonar;
+Sonar * rvUltraschallsensor2 = new Sonar;
+Sonar * rvUltraschallsensor3 = new Sonar;
+Sonar * lvUltraschallsensor1 = new Sonar;
+Sonar * lvUltraschallsensor2 = new Sonar;
+Sonar * lvUltraschallsensor3 = new Sonar;
 
-Sonar rhUltraschallsensor1;
-Sonar rhUltraschallsensor2;
-Sonar rhUltraschallsensor3;
-Sonar lhUltraschallsensor1;
-Sonar lhUltraschallsensor2;
-Sonar lhUltraschallsensor3;
+Sonar * rhUltraschallsensor1 = new Sonar;
+Sonar * rhUltraschallsensor2 = new Sonar;
+Sonar * rhUltraschallsensor3 = new Sonar;
+Sonar * lhUltraschallsensor1 = new Sonar;
+Sonar * lhUltraschallsensor2 = new Sonar;
+Sonar * lhUltraschallsensor3 = new Sonar;
 
 //Motoren
-engine MotorA;
-engine MotorB;
-engine MotorC;
-engine MotorD;
+engine * MotorA = new engine;
+engine * MotorB = new engine;
+engine * MotorC = new engine;
+engine * MotorD = new engine;
+
+//switching Motoren
+engine * MotorCA = new engine;
+engine * MotorCB = new engine;
+engine * MotorCC = new engine;
+engine * MotorCD = new engine;
 
 //switching
-switching CDriveA(pin.get_cRadAf(), pin.get_cRadAb());
-switching CDriveB(pin.get_cRadBf(), pin.get_cRadBb());
-switching CDriveC(pin.get_cRadCf(), pin.get_cRadCb());
-switching CDriveD(pin.get_cRadDf(), pin.get_cRadDb());
+switching * CDriveA = new switching(& MotorCA);
+switching * CDriveB = new switching(& MotorCB);
+switching * CDriveC = new switching(& MotorCC);
+switching * CDriveD = new switching(& MotorCD);
+
+//Rotationssensoren
+Rotationssensor * RotLV = new Rotationssensor(pin->get_RegStepsLV(),pin->get_RegRevsLV(),& pin);
+Rotationssensor * RotRV = new Rotationssensor(pin->get_RegStepsRV(),pin->get_RegRevsRV(),& pin);
+Rotationssensor * RotLH = new Rotationssensor(pin->get_RegStepsLH(),pin->get_RegRevsLH(),& pin);
+Rotationssensor * RotRH = new Rotationssensor(pin->get_RegStepsRH(),pin->get_RegRevsRH(),& pin);
 
 //Lenkung
 Lenkung LenkungCDrive;
 
-//manuelle Lenkung
-manualOverwrite mSteuerung(0x27);
-
 //Displays
-LCM lcm;
+LCM * lcm = new LCM;
+
+
+//manuelle Lenkung
+manualOverwrite mSteuerung(& lcm,& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& MotorA,& MotorB,& MotorC,& MotorD,& MotorCA,& MotorCB,& MotorCC,& MotorCD,& RotLV,& RotRV,& RotLH,& RotRH);
+//Cs
+C * Cs = new C(& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& RotLV,& RotRV,& RotLH,& RotRH, & CDriveA, & CDriveB,& CDriveC,& CDriveD,& MotorA,& MotorB, & MotorC, & MotorD);
 
 //Initiallisieren aller wichtigen Variablen
 int xAchse = 0;
 int yAchse = 0;
 int zAchse = 0;
+int DLR = 0;
+int DTB = 0;
 bool cModule = false;
 
 
@@ -73,87 +92,111 @@ void SetUp()
 	//SetUp-Funktionen der Klassen aufrufen
 
 	//Schnittstelle
-	pin.InterfaceSetUp();
+	pin->InterfaceSetUp();
 
 	//Ultraschallsensoren
-	rvUltraschallsensor1.init(pin.get_rvUltraschallsensorTrigger1(), pin.get_rvUltraschallsensorEcho1());
-	rvUltraschallsensor2.init(pin.get_rvUltraschallsensorTrigger2(), pin.get_rvUltraschallsensorEcho2());
-	rvUltraschallsensor3.init(pin.get_rvUltraschallsensorTrigger3(), pin.get_rvUltraschallsensorEcho3());
-	lvUltraschallsensor1.init(pin.get_lvUltraschallsensorTrigger1(), pin.get_lvUltraschallsensorEcho1());
-	lvUltraschallsensor2.init(pin.get_lvUltraschallsensorTrigger2(), pin.get_lvUltraschallsensorEcho2());
-	lvUltraschallsensor3.init(pin.get_lvUltraschallsensorTrigger3(), pin.get_lvUltraschallsensorEcho3());
+	rvUltraschallsensor1->init(pin->get_rvUltraschallsensorTrigger1(), pin->get_rvUltraschallsensorEcho1(),1);//last int height
+	rvUltraschallsensor2->init(pin->get_rvUltraschallsensorTrigger2(), pin->get_rvUltraschallsensorEcho2(),1);
+	rvUltraschallsensor3->init(pin->get_rvUltraschallsensorTrigger3(), pin->get_rvUltraschallsensorEcho3(),1,45);//last int mounting angle
+	lvUltraschallsensor1->init(pin->get_lvUltraschallsensorTrigger1(), pin->get_lvUltraschallsensorEcho1(),1);
+	lvUltraschallsensor2->init(pin->get_lvUltraschallsensorTrigger2(), pin->get_lvUltraschallsensorEcho2(),1);
+	lvUltraschallsensor3->init(pin->get_lvUltraschallsensorTrigger3(), pin->get_lvUltraschallsensorEcho3(),1,45);
 
-	rhUltraschallsensor1.init(pin.get_rhUltraschallsensorTrigger1(), pin.get_rhUltraschallsensorEcho1());
-	rhUltraschallsensor2.init(pin.get_rhUltraschallsensorTrigger2(), pin.get_rhUltraschallsensorEcho2());
-	rhUltraschallsensor3.init(pin.get_rhUltraschallsensorTrigger3(), pin.get_rhUltraschallsensorEcho3());
-	lhUltraschallsensor1.init(pin.get_lhUltraschallsensorTrigger1(), pin.get_lhUltraschallsensorEcho1());
-	lhUltraschallsensor2.init(pin.get_lhUltraschallsensorTrigger2(), pin.get_lhUltraschallsensorEcho2());
-	lhUltraschallsensor3.init(pin.get_lhUltraschallsensorTrigger3(), pin.get_lhUltraschallsensorEcho3());
+	rhUltraschallsensor1->init(pin->get_rhUltraschallsensorTrigger1(), pin->get_rhUltraschallsensorEcho1(),1);
+	rhUltraschallsensor2->init(pin->get_rhUltraschallsensorTrigger2(), pin->get_rhUltraschallsensorEcho2(),1);
+	rhUltraschallsensor3->init(pin->get_rhUltraschallsensorTrigger3(), pin->get_rhUltraschallsensorEcho3(),1,45);
+	lhUltraschallsensor1->init(pin->get_lhUltraschallsensorTrigger1(), pin->get_lhUltraschallsensorEcho1(),1);
+	lhUltraschallsensor2->init(pin->get_lhUltraschallsensorTrigger2(), pin->get_lhUltraschallsensorEcho2(),1);
+	lhUltraschallsensor3->init(pin->get_lhUltraschallsensorTrigger3(), pin->get_lhUltraschallsensorEcho3(),1,45);
 
 	//Motoren
-	MotorA.initialisEngine(pin.get_RadAf(), pin.get_RadAb());
-	MotorB.initialisEngine(pin.get_RadBf(), pin.get_RadBb());
-	MotorC.initialisEngine(pin.get_RadCf(), pin.get_RadCb());
-	MotorD.initialisEngine(pin.get_RadDf(), pin.get_RadDb());
+	MotorA->initialisEngine(pin->get_RadAf(), pin->get_RadAb());
+	MotorB->initialisEngine(pin->get_RadBf(), pin->get_RadBb());
+	MotorC->initialisEngine(pin->get_RadCf(), pin->get_RadCb());
+	MotorD->initialisEngine(pin->get_RadDf(), pin->get_RadDb());
+	//C-Motoren
+	MotorCA->initialisEngine(pin->get_cRadAf(), pin->get_cRadAb());
+	MotorCB->initialisEngine(pin->get_cRadBf(), pin->get_cRadBb());
+	MotorCC->initialisEngine(pin->get_cRadCf(), pin->get_cRadCb());
+	MotorCD->initialisEngine(pin->get_cRadDf(), pin->get_cRadDb());
 
 	//"Output" auf Display
-	lcm.write(1, 0, "SetUp fertig!");
-	lcm.write(2, 1, "Gute Fahrt!");
+	lcm->write(1, 0, "SetUp fertig!");
+	lcm->write(2, 1, "Gute Fahrt!");
 
 	delay(3000);
 	
-	lcm.clear();
+	lcm->clear();
 }
 
 
 void JoystickWerte()
 {
-	if (joystick.sample(&Event) && Event.isAxis())//Auslesen des Joysticks fürs normale Fahren,Driften und Drehen
-	{
-		if (Event.number == 0)
+	if (joystick.sample(&Event)){
+		if(Event.isAxis())//Auslesen des Joysticks fürs normale Fahren,Driften und Drehen
 		{
-			xAchse = Event.value / 327;
+			switch (Event.number)
+			{
+				case 0:
+					xAchse = Event.value / 327;
+					break;
+			
+				case 1:
+					yAchse = Event.value / 327;
+					break;
+
+				case 2:
+					zAchse = Event.value / 327;
+					break;
+
+				case 4:
+					DLR = Event.value;
+					break;
+
+				case 5:
+					DTB = Event.value;
+					break;
+			}
 		}
 
-		if (Event.number == 1)
+		if(Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren über die C-Module
 		{
-			yAchse = Event.value / 327;
+			if(Event.number == 3 && Event.value == 1)
+			{
+				cModule = true;
+			}
 		}
-
-		if (Event.number == 2)
+		else
 		{
-			zAchse = Event.value / 327;
+			cModule = false;
 		}
-	}
-
-	if(joystick.sample(&Event)&&Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren über die C-Module
-	{
-		if(Event.number == 3 && Event.value == 1)
-		{
-			cModule = true;
+		if(Event.number == 0){
+			Cs->set_end();
 		}
-	}
-	else
-	{
-		cModule = false;
+		if(Event.number == 1){
+			Cs->set_pause();
+		}
 	}
 }
 
 
 int fall()
 {
-	if (pin.WerteLesen(pin.get_Parken()) == 1)
+	if (Cs->getOnlineStat()){
+		return 4;
+	}
+	if (pin->WerteLesen(pin->get_Parken()) == 1)
 	{
 		return 0;
 	}
 	else
 	{
-		if (pin.WerteLesen(pin.get_fahrtModiNormalesFahren()) == 1) 
+		if (pin->WerteLesen(pin->get_fahrtModiNormalesFahren()) == 1) 
 		{
 			return 1;
 		}
 
-		if (pin.WerteLesen(pin.get_fahrtModiDrehen()) == 1) 
+		if (pin->WerteLesen(pin->get_fahrtModiDrehen()) == 1) 
 		{
 			return 3;
 		}
@@ -163,7 +206,7 @@ int fall()
 			return 4;
 		}
 
-		if (pin.WerteLesen(pin.get_manuelleSteuerung()) == 1)
+		if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
 		{
 			return 5;
 		}
@@ -179,12 +222,12 @@ int main()
 
 	if (joystick.isFound() == false)
 	{
-		lcm.write(1, 0, "Kein Joystick!");
-		lcm.write(2, 1, "Keine Fahrt");
+		lcm->write(1, 0, "Kein Joystick!");
+		lcm->write(2, 1, "Keine Fahrt");
 		
 		delay(5000);
 		
-		lcm.clear();
+		lcm->clear();
 		
 		return 0;
 	}
@@ -200,68 +243,91 @@ int main()
 			case 0:
 				LenkungCDrive.parken();
 				
-				lcm.clear();
+				lcm->clear();
 
-				lcm.write(0, 0, "Fahrtmodus:");
-				lcm.write(5, 1, "Parken");
+				lcm->write(0, 0, "Fahrtmodus:");
+				lcm->write(5, 1, "Parken");
 				
 				break;
 		
 			case 1:
 				LenkungCDrive.normaleLenkung(xAchse, yAchse);
 				
-				lcm.clear();
+				lcm->clear();
 
-				lcm.write(0, 0, "Fahrtmodus:");
-				lcm.write(4, 1, "normales Fahren");
+				lcm->write(0, 0, "Fahrtmodus:");
+				lcm->write(4, 1, "normales Fahren");
 				
 				break;
 
 			case 2:
 				LenkungCDrive.driften(xAchse, yAchse);
 				
-				lcm.clear();
+				lcm->clear();
 				
-				lcm.write(0, 0, "Fahrtmodus:");
-				lcm.write(4, 1, "Driften");
+				lcm->write(0, 0, "Fahrtmodus:");
+				lcm->write(4, 1, "Driften");
 				
 				break;
 
 			case 3:
 				LenkungCDrive.drehen(zAchse);
 				
-				lcm.clear();
+				lcm->clear();
 
-				lcm.write(0, 0, "Fahrtmodus:");
-				lcm.write(5, 1, "Drehen");
+				lcm->write(0, 0, "Fahrtmodus:");
+				lcm->write(5, 1, "Drehen");
 				
 				break;
 			
 			case 4:
-				//C-Klasse
+				//C-Klasse aufrufe
 
-				lcm.clear();
+				lcm->clear();
 
-				lcm.write(0, 0, "Fahrtmodus:");
-				lcm.write(3, 1, "Hochfahren");
+				lcm->write(0, 0, "Fahrtmodus:");
+				lcm->write(3, 1, "Hochfahren");
+
+				Cs->UP();
 
 				break;
 			
 			case 5:
-				//manuelle Steuerung
+				mSteuerung.renewNavVar(DLR, DTB, xAchse);
+				mSteuerung.navigate();
+				mSteuerung.express();
+
+				lcm->clear();
+
+				//lcm.write(0, 0, mSterueung.Was auch immer hier Stehen soll);
+				//lcm.write(0, 1, );
+
 				break;
 		}
 
-		//Zuweisung der Leistungen den Motoren 
-		MotorA.set_power(LenkungCDrive.get_leistungRadA());
-		MotorB.set_power(LenkungCDrive.get_leistungRadB());
-		MotorC.set_power(LenkungCDrive.get_leistungRadC());
-		MotorD.set_power(LenkungCDrive.get_leistungRadD());
+		//Zuweisung der Leistungen den Motoren
+		switch (fall())
+		{
+			case 4:
+				//c-klasse motoren zuweisung
+				break;
+
+			case 5:
+				//manualControl zuweisung
+				break;
+
+			default:
+				MotorA->set_power(LenkungCDrive.get_leistungRadA());
+				MotorB->set_power(LenkungCDrive.get_leistungRadB());
+				MotorC->set_power(LenkungCDrive.get_leistungRadC());
+				MotorD->set_power(LenkungCDrive.get_leistungRadD());
+				break;
+		}
 
 		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
 		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
 
-		delay(75);
+		//delay(75);
 	}
 
 	return 0;
