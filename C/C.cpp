@@ -1,10 +1,9 @@
 // C-Up.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
 #include "C.h"
 
-C::C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt, Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt, Rotationssensor ** wlf, Rotationssensor ** wrf, Rotationssensor ** wlb, Rotationssensor ** wrb, switching ** svl, switching ** svr, switching ** sbl, switching ** sbr, engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr)//gets the values needed to use the Claas, (Z.B. lenkung; Motoren, Switching, Ultraschälle, Rotationssensoren ...
+C::C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt, Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt, Rotationssensor ** wlf, Rotationssensor ** wrf, Rotationssensor ** wlb, Rotationssensor ** wrb, switching ** svl, switching ** svr, switching ** sbl, switching ** sbr, engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr)//gets the values needed to use the Claas, (Z.B. lenkung; Motoren, Switching, Ultraschï¿½lle, Rotationssensoren ...
 {
 	//brings the left ultra sonic sensors in position
 	fUS[0][0] = *flb;
@@ -37,12 +36,12 @@ C::C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar
 	Wheels[1] = *wrf;
 	Wheels[2] = *wlb;
 	Wheels[3] = *wrb;
-	//					-Anbringungshöhe-needetDistance tan(Maximal Winkel für Steigung)
-	//Maxschräghöhe	=	----------------------------------------------------------------
-	//					tam(NeigungswinkelSensor) - tan(Maxiaml Winkel für Steigung)
+	//					-Anbringungshoehe-needetDistance tan(Maximal Winkel fuer Steigung)
+	//Maxschraeghoehe	=	----------------------------------------------------------------
+	//					tam(NeigungswinkelSensor) - tan(Maxiaml Winkel fuer Steigung)
 	for (int i = 0; i < 2; i++)
 	{
-		maxSchrägHöhe[i] = ((-(fUS[i][2]->getMountigHigth())) - (needetDistance * tan(DegreeToRad * maxAngle))) / (DegreeToRad * (tan(fUS[i][2]->getmountingAngle()))* tan(maxAngle));
+		maxSchraegHoehe[i] = ((-(fUS[i][2]->getMountigHigth())) - (needetDistance * tan(DegreeToRad * maxAngle))) / (DegreeToRad * (tan(fUS[i][2]->getmountingAngle()))* tan(maxAngle));
 	}
 }
 
@@ -78,7 +77,7 @@ void C::UP() {
 			}
 		}
 
-		if (!(needetDistance - accuracy <= USm[0][0] <= needetDistance + accuracy) && !(needetDistance - accuracy <= USm[1][0] <= needetDistance + accuracy))//Checks , if no Sensor is matching the wanted distance
+		if (!(needetDistance - accuracy <= USm[0][0] &&  USm[0][0] <= needetDistance + accuracy) && !(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))//Checks , if no Sensor is matching the wanted distance
 		{
 			if (needetDistance - accuracy <= USm[0][0])//if the distance is greater then the wanted distance it shoul move everything one rotationstep further
 			{
@@ -86,7 +85,7 @@ void C::UP() {
 				{
 					(*Engines[i]).set_power(maneuverPower);
 				}
-				while (Wheels[0]->get_RSteps < lastRotl + 1) {}//waits for the movement of one step
+				while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}//waits for the movement of one step
 				for (int i = 0; i < 4; i++)//stops all engines
 				{
 					(*Engines[i]).set_power(0);
@@ -98,7 +97,7 @@ void C::UP() {
 				{
 					(*Engines[i]).set_power(-maneuverPower);
 				}
-				while (Wheels[0]->get_RSteps > lastRotl - 1) {}
+				while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
 				for (int i = 0; i < 4; i++)
 				{
 					(*Engines[i]).set_power(0);
@@ -107,7 +106,7 @@ void C::UP() {
 		}
 		else//if at least one Sensor matches the wanted distance
 		{
-			if (!(needetDistance - accuracy <= USm[0][0] <= needetDistance + accuracy))//Checks if the left Sensor is matching
+			if (!(needetDistance - accuracy <= USm[0][0] && USm[0][0] <= needetDistance + accuracy))//Checks if the left Sensor is matching
 			{
 				if (needetDistance - accuracy < USm[0][0])//if it is not matching the distance got shrinked by one step on this side
 				{
@@ -115,7 +114,7 @@ void C::UP() {
 					{
 						(*Engines[i * 2]).set_power(maneuverPower);
 					}
-					while (Wheels[0]->get_RSteps < lastRotl + 1) {}//waits for the step
+					while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}//waits for the step
 					for (int i = 0; i < 2; i++)//gets all the engines going in the direction stoping
 					{
 						(*Engines[i * 2]).set_power(0);
@@ -126,7 +125,7 @@ void C::UP() {
 					{
 						(*Engines[i * 2]).set_power(-maneuverPower);
 					}
-					while (Wheels[0]->get_RSteps > lastRotl - 1) {}
+					while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
 					for (int i = 0; i < 2; i++)
 					{
 						(*Engines[i * 2]).set_power(0);
@@ -134,7 +133,7 @@ void C::UP() {
 				}
 			}
 			else {//if the left sensor is not matching
-				if (!(needetDistance - accuracy <= USm[1][0] <= needetDistance + accuracy))//it checks the other side
+				if (!(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))//it checks the other side
 				{
 					if (needetDistance - accuracy < USm[1][0])//same just for the other side
 					{
@@ -142,7 +141,7 @@ void C::UP() {
 						{
 							(*Engines[i * 2 + 1]).set_power(maneuverPower);
 						}
-						while (Wheels[0]->get_RSteps < lastRotl + 1) {}
+						while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}
 						for (int i = 0; i < 2; i++)
 						{
 							(*Engines[1 + i * 2]).set_power(0);
@@ -153,7 +152,7 @@ void C::UP() {
 						{
 							(*Engines[i * 2 + 1]).set_power(-maneuverPower);
 						}
-						while (Wheels[0]->get_RSteps > lastRotl - 1) {}
+						while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
 						for (int i = 0; i < 2; i++)
 						{
 							(*Engines[1 + i * 2]).set_power(0);
@@ -161,7 +160,7 @@ void C::UP() {
 					}
 				}
 				else//if we are here all other Sensors are on a distance witch is in the accuracy
-				{					
+				{
 					//	middle Sensor if we are goed to go or not
 					if (USm[0][1] <= USm[0][0]+accuracy+ lengthDifMidLow || USm[1][1] <= USm[1][0] + accuracy + lengthDifMidLow)
 					{
@@ -170,14 +169,14 @@ void C::UP() {
 						return;
 					}
 					//  same for top Sensor (needs to measure earlier to)
-					if (maxSchrägHöhe[0]+accuracy > fUS[0][2]->calcHeigth(timeout)> possibleHigth + accuracy || maxSchrägHöhe[0] + accuracy > fUS[1][2]->calcHeigth(timeout)> possibleHigth + accuracy)
+					if ((maxSchraegHoehe[0]+accuracy > fUS[0][2]->calcHeigth(timeout) && fUS[0][2]->calcHeigth(timeout) > possibleHigth + accuracy )|| (maxSchraegHoehe[0] + accuracy > fUS[1][2]->calcHeigth(timeout) && fUS[1][2]->calcHeigth(timeout) > possibleHigth + accuracy))
 					{
 						//if we are here the heighest Sensors thinks the wall or curb is to heigh
 						reset();
 						return;
 					}
 					//	When we allready passed this one once we wont do it again until a new curb arrives
-					//	point of no return 
+					//	point of no return
 					NoWayBack = true;
 					//	pauses the abbility to pause for a moment
 					KeepGoing = true;
@@ -203,7 +202,7 @@ void C::UP() {
 		KeepGoing = false;
 
 		//move forward until we can switch the back
-		
+
 		//calculation
 		//distance needet for the back wheels = neededDistance+distance betwen the axes
 		//if condition needs to be true while the disance between the axes has not been past
@@ -250,7 +249,7 @@ void C::upper(bool back) {
 	Switch[0 + (back*2)]->down();
 	Switch[1 + (back * 2)]->down();
 	//safe the initial state of all rotations
-	
+
 	for (int i = 0; i < 4; i++)
 	{
 		Wheels[i]->read();
@@ -262,15 +261,15 @@ void C::upper(bool back) {
 	{
 		Engines[i]->set_power(upwardsPower);
 	}
-	while (((RotaryEntryStates[0 + (back * 2)][0] >= Wheels[0]->get_RSteps()) || (RotaryEntryStates[0 + (back * 2)][1] + 1 >= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] >= Wheels[1]->get_RSteps()) || (RotaryEntryStates[1 + (back * 2)][1] + 1 >= Wheels[1]->get_RRevs())))
+	while (((RotaryEntryStates[(back * 2)][0]+1 >= Wheels[0]->get_RSteps()) || (RotaryEntryStates[(back * 2)][1] + 1 >= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] +1 >= Wheels[1]->get_RSteps()) || (RotaryEntryStates[1 + (back * 2)][1] + 1 >= Wheels[1]->get_RRevs())))
 	{
 	}
 	for (int i = 0; i < 4; i++)
 	{
 		Engines[i]->set_power(0);
 	}
-	Switch[0 + (back * 2)]->up;
-	Switch[1 + (back * 2)]->up;
+	Switch[0 + (back * 2)]->up();
+	Switch[1 + (back * 2)]->up();
 }
 
 void C::reset() {

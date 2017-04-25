@@ -1,10 +1,9 @@
 #define _USE_MATH_DEFINES
 #include "math.h"
-#include <cmath>
-#include "Ultra.h"
-#include "engine.h"
-#include "switching.h"
-#include "Rotationssensor.h";
+#include "../Ultrasonic/libSonar.h"
+#include "../engine/engine.h"
+#include "../switchig/switching.h"
+#include "../rotaryencoder/RotationssensorArduino.h"
 
 class C
 {
@@ -58,7 +57,7 @@ private:
 	const int timeout = 30000;//value out of the example from the originel Libsonar library 
 	//caculatet consts
 	const double	lengthDifMidLow = sin((2 * M_PI) - (DegreeToRad * maxAngle)) * (heigthMiddel - heigthLowest);// distance difference that is needet to define something as a slope
-	double maxSchrägHöhe[2];
+	double maxSchraegHoehe[2];
 	//
 	//measurements
 	//
