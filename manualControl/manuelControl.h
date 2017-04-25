@@ -1,15 +1,25 @@
+#include "../engine/engine.h"
+#include "../Ultrasonic/libSonar.h"
+#include "../Displays/lcm1602.h"
+#include "../rotaryencoder/RotationssensorArduino.h"
+
 class manualOverwrite
 {
 private:
 	//ouput specific variable
-	int DisAdr = 0;//Diyplay Adress
-
-				   //Integers to navigate
+	engine *  engines[4];
+	engine * Cengines[4];
+	Sonar * fUS[2][3];
+	Sonar * bUS[2][3];
+	Rotationssensor * Roti[4];
+	LCM * lcm;
+	const int timeout = 3000;//timout for Ultrasonic sensors
+	//Integers to navigate
 	int DLR = 0;//dpad left right axis
 	int DTB = 0;//dpad top bottom axis
 	int XAc = 0;//X achse
 
-				//Navigation vars
+	//Navigation vars
 	int depth = 0;//indicates the depth in the in the menu for every confiramtion of a menu point you get one level deeper and vice versa
 	const int minDepth = 0;//marked the minimal depth
 	static const int maxDepth = 2;//marks the macimal depth
@@ -22,6 +32,7 @@ private:
 	int lastPosNavi[3] = { 0,0,0 };//keeps track of the last recogniest position of each navigator first position left to rigth axis D-pad, second position top to bottom axis D-pad, third value of the thrust controller
 	int lastDepth = -1;
 	int lastPos = -1;
+	
 	//text to display
 	std::string Zeile1[1] = { "Manuelle Steuerung" };
 	std::string Zeile2[5] = { "Räder Paar", "Einzelnes Rad", "Einzelner C motor","Ultraschallsensor Check","Rotatationssensor Check" };
@@ -31,12 +42,13 @@ private:
 	std::string Zeile6[30] = { "Leistung: %u %", "Leistung: %u %","Leistung: %u %", "Leistung: %u %","Leistung: %u %", "Leistung: %u %","Leistung: %u %", "Leistung: %u %","Leistung: %u %", "Leistung: %u %", "vlu: %u m",	"vlm: %u m","vlo: %u m","vru: %u m","vrm: %u m","vro: %u m","hlu: %u m","hlim: %u m","hlo: %u m","hru: %u m","hrm: %u m","hro: %u m","C vl: %u °","C vr: %u °","hl: %u °","C hr: %u °","Rad vl: %u °","Rad vr: %u °","Rad hl: %u °","Rad hr: %u °" };
 
 	std::string * Texte[6] = { &Zeile1[0],&Zeile2[0],&Zeile3[0],&Zeile4[0],&Zeile5[0],&Zeile6[0] };
+	
 	//functions
 	int evenLine();//Determines which String to print if we have an even line
 	int odLine();//same for the od lines, becaues of a changed data structure
-	void print(std::string toPrint);//outputs the Strings to te Displays
+	void print(std::string toPrint, std::string toPrintTwo);//outputs the Strings to te Displays
 public:
-	manualOverwrite(int displayAdresse);//sets the class up, tells which adress rto use for the Display
+	manualOverwrite(LCM ** lcm,Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt, Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt, engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr, engine ** cvl, engine ** cvr, engine ** cbl, engine ** cbr ,Rotationssensor ** rotLV, Rotationssensor ** rotRV, Rotationssensor ** rotLH, Rotationssensor ** rotRH);//sets the class up, tells which adress rto use for the Display
 	void renewNavVar(int DLR, int DST, int XAc);//takes the new values for the navigation
 	void navigate();//works with the data gatherd by renewNavVar and defines the position where you are
 	void express();//takes the position ant prints the appropriare text and is responsable to deliver the gatherd values to the egines or to gather the data from a sensor
