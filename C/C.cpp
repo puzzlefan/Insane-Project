@@ -81,26 +81,42 @@ void C::UP() {
 		{
 			if (needetDistance - accuracy <= USm[0][0])//if the distance is greater then the wanted distance it shoul move everything one rotationstep further
 			{
-				for (int i = 0; i < 4; i++)//sets the direction to all engines
-				{
-					(*Engines[i]).set_power(maneuverPower);
+
+				if (!oneStepForward) {
+					for (int i = 0; i < 4; i++)//sets the direction to all engines
+					{
+						(*Engines[i]).set_power(maneuverPower);
+					}
+					oneStepForward = true;
+					oneStepForwardlastRR = lastRotr;
+					oneStepForwardlastRL = lastRotl;
 				}
-				while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}//waits for the movement of one step
-				for (int i = 0; i < 4; i++)//stops all engines
-				{
-					(*Engines[i]).set_power(0);
+
+				if(Wheels[0]->get_RSteps() >= oneStepForwardlastRL + 1 && Wheels[1]->get_RSteps() >= oneStepForwardlastRR + 1 && oneStepForward) {//waits for the movement of one step
+					for (int i = 0; i < 4; i++)//stops all engines
+					{
+						(*Engines[i]).set_power(0);
+					}
+					oneStepForward = false;
 				}
 			}
 			else//if the distance is to small everything moves back
 			{
-				for (int i = 0; i < 4; i++)//same for other direction
-				{
-					(*Engines[i]).set_power(-maneuverPower);
+				if (!oneStepBackward) {
+					for (int i = 0; i < 4; i++)//same for other direction
+					{
+						(*Engines[i]).set_power(-maneuverPower);
+					}
+					oneStepBackward = true;
+					oneStepBackwardlastRR = lastRotr;
+					oneStepBackwardlastRL = lastRotl;
 				}
-				while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
-				for (int i = 0; i < 4; i++)
-				{
-					(*Engines[i]).set_power(0);
+				if(Wheels[0]->get_RSteps() <= oneStepBackwardlastRL - 1 && Wheels[1]->get_RSteps() <= oneStepBackwardlastRR - 1) {
+					for (int i = 0; i < 4; i++)
+					{
+						(*Engines[i]).set_power(0);
+					}
+					oneStepBackward = false;
 				}
 			}
 		}
@@ -110,25 +126,37 @@ void C::UP() {
 			{
 				if (needetDistance - accuracy < USm[0][0])//if it is not matching the distance got shrinked by one step on this side
 				{
-					for (int i = 0; i < 2; i++)//gets al engines for this direction going
-					{
-						(*Engines[i * 2]).set_power(maneuverPower);
+					if (!oneStepLeftFWD) {
+						for (int i = 0; i < 2; i++)//gets al engines for this direction going
+						{
+							(*Engines[i * 2]).set_power(maneuverPower);
+						}
+						oneStepLeftFWD = true;
+						oneStepLeftFWDlastRL = lastRotl;
 					}
-					while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}//waits for the step
-					for (int i = 0; i < 2; i++)//gets all the engines going in the direction stoping
-					{
-						(*Engines[i * 2]).set_power(0);
+					if(Wheels[0]->get_RSteps() >= oneStepLeftFWDlastRL + 1 && oneStepLeftFWD) {//waits for the step
+						for (int i = 0; i < 2; i++)//gets all the engines going in the direction stoping
+						{
+							(*Engines[i * 2]).set_power(0);
+						}
+						oneStepLeftFWD = false;
 					}
 				}
 				else {//if(needetDistance - accuracy > USm[0][0]) {//or the distane gets greater if needet
-					for (int i = 0; i < 2; i++)//same...
-					{
-						(*Engines[i * 2]).set_power(-maneuverPower);
+					if (!oneStepLeftBWD) {
+						for (int i = 0; i < 2; i++)//same...
+						{
+							(*Engines[i * 2]).set_power(-maneuverPower);
+						}
+						oneStepLeftBWD = true;
+						oneStepLeftBWDlastRL = lastRotl;
 					}
-					while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
-					for (int i = 0; i < 2; i++)
-					{
-						(*Engines[i * 2]).set_power(0);
+					if (Wheels[0]->get_RSteps() <= oneStepLeftBWDlastRL - 1 && oneStepLeftBWD) {
+						for (int i = 0; i < 2; i++)
+						{
+							(*Engines[i * 2]).set_power(0);
+						}
+						oneStepLeftBWD = false;
 					}
 				}
 			}
@@ -137,25 +165,37 @@ void C::UP() {
 				{
 					if (needetDistance - accuracy < USm[1][0])//same just for the other side
 					{
-						for (int i = 0; i < 2; i++)//same ...
-						{
-							(*Engines[i * 2 + 1]).set_power(maneuverPower);
+						if (!oneStepRightFWD) {
+							for (int i = 0; i < 2; i++)//same ...
+							{
+								(*Engines[i * 2 + 1]).set_power(maneuverPower);
+							}
+							oneStepRightFWD = true;
+							oneStepRightFWDlastRR = lastRotr;
 						}
-						while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}
-						for (int i = 0; i < 2; i++)
-						{
-							(*Engines[1 + i * 2]).set_power(0);
+						if(oneStepRightFWD && Wheels[1]->get_RSteps() >= oneStepRightFWDlastRR + 1) {
+							for (int i = 0; i < 2; i++)
+							{
+								(*Engines[1 + i * 2]).set_power(0);
+							}
+							oneStepRightFWD = false;
 						}
 					}
 					else {//if(needetDistance - accuracy > USm[1][0]) {//same just for the other side
-						for (int i = 0; i < 2; i++)//same...
-						{
-							(*Engines[i * 2 + 1]).set_power(-maneuverPower);
+						if (!oneStepRightBWD) {
+							for (int i = 0; i < 2; i++)//same...
+							{
+								(*Engines[i * 2 + 1]).set_power(-maneuverPower);
+							}
+							oneStepRightBWD = true;
+							oneStepRightBWDlastRR = lastRotr;
 						}
-						while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
-						for (int i = 0; i < 2; i++)
-						{
-							(*Engines[1 + i * 2]).set_power(0);
+						if(oneStepRightBWD && Wheels[1]->get_RSteps() <= oneStepRightBWDlastRR - 1) {
+							for (int i = 0; i < 2; i++)
+							{
+								(*Engines[1 + i * 2]).set_power(0);
+							}
+							oneStepRightBWD = false;
 						}
 					}
 				}
@@ -196,80 +236,127 @@ void C::UP() {
 			RotaryEntryStatesforBack[i][0] = Wheels[i]->get_Steps();
 			RotaryEntryStatesforBack[i][1] = Wheels[i]->get_Revs();
 		}
-
-		upper(true);//makes the moves naccesarry to step on the curb
-		//allows pausing
-		KeepGoing = false;
-
-		//move forward until we can switch the back
-
-		//calculation
-		//distance needet for the back wheels = neededDistance+distance betwen the axes
-		//if condition needs to be true while the disance between the axes has not been past
-		//distance between the axis-change of position through rotation
-		//left
-		if (distanceAxes>= Wheels[2]->get_distanceFromThenToNow(RotaryEntryStatesforBack[2][0], RotaryEntryStatesforBack[2][1]))
-		{
-			for (int i = 0; i < 2; i++)
-			{
-				Engines[i*2]->set_power(upwardsPower);
+		if(!frontUp){//runs upper until front up gets positive
+			frontUpMoving = true;
+			if(upper(false)){//makes the moves naccesarry to step on the curb
+				//allows pausing
+				KeepGoing = false;
+				frontUp = true;
+				frontUpMoving = false;
 			}
 		}
-		else {
-			for (int i = 0; i < 2; i++)
-			{
-				Engines[i*2]->set_power(0);
-			}
-		}
-		//rigth
-		if (distanceAxes >= Wheels[3]->get_distanceFromThenToNow(RotaryEntryStatesforBack[3][0], RotaryEntryStatesforBack[3][1]))
-		{
-			for (int i = 0; i < 2; i++)
-			{
-				Engines[1 + i * 2]->set_power(upwardsPower);
-			}
-		}
-		else {
-			for (int i = 0; i < 2; i++)
-			{
-				Engines[1 + i * 2]->set_power(0);
-			}
-		}
+		if (!frontUpMoving&&frontUp) {
+			//move forward until we can switch the back
 
-		//disables pause until we are complete
-		KeepGoing = true;
+			//calculation
+			//distance needet for the back wheels = neededDistance+distance betwen the axes
+			//if condition needs to be true while the disance between the axes has not been past
+			//distance between the axis-change of position through rotation
+			//left
+			if (distanceAxes>= Wheels[2]->get_distanceFromThenToNow(RotaryEntryStatesforBack[2][0], RotaryEntryStatesforBack[2][1]))
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					Engines[i*2]->set_power(upwardsPower);
+				}
+			}
+			else {
+				for (int i = 0; i < 2; i++)
+				{
+					Engines[i*2]->set_power(0);
+				}
+			}
+			//rigth
+			if (distanceAxes >= Wheels[3]->get_distanceFromThenToNow(RotaryEntryStatesforBack[3][0], RotaryEntryStatesforBack[3][1]))
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					Engines[1 + i * 2]->set_power(upwardsPower);
+				}
+			}
+			else {
+				for (int i = 0; i < 2; i++)
+				{
+					Engines[1 + i * 2]->set_power(0);
+				}
+			}
 
-		upper(true);//moves forward until the back is also on the curb
-		void reset();//free the programm
+			//disables pause until we are complete
+			KeepGoing = true;
+
+			if (!backUp) {
+				backUpMoving = true;
+				if (upper(true)) {//moves forward until the back is also on the curb
+					KeepGoing = false; // allow pause if you can hit the Switch erly enoug, which is logically impossible but how cares
+					backUp = true;
+					backUpMoving = false;
+				}
+			}
+			if (!backUpMoving&&backUp) {
+				void reset();//free the programm
+			}
+		}
 	}
 }
 
-void C::upper(bool back) {
-	//switch front
-	Switch[0 + (back*2)]->down();
-	Switch[1 + (back * 2)]->down();
-	//safe the initial state of all rotations
+bool C::upper(bool back) {
+	if (RoundOne) {
+		//safe the initial state of all rotations
+		for (int i = 0; i < 4; i++)
+		{
+			Wheels[i]->read();
+			RotaryEntryStates[i][0] = Wheels[i]->get_Steps();
+			RotaryEntryStates[i][1] = Wheels[i]->get_Revs();
+		}
+		afterRoundOne = false;
+		switchDown = true;
+	}
+	if (switchDown) {
+		//switch front
+		if(Switch[0 + (back*2)]->down() && Switch[1 + (back * 2)]->down()){
+			switchDown = false;
+			switchedDown = true;
+		}
+	}
 
-	for (int i = 0; i < 4; i++)
-	{
-		Wheels[i]->read();
-		RotaryEntryStates[i][0] = Wheels[i]->get_Steps();
-		RotaryEntryStates[i][1] = Wheels[i]->get_Revs();
-	}
 	//move forward until we can switch again
-	for (int i = 0; i < 4; i++)
-	{
-		Engines[i]->set_power(upwardsPower);
+	if(switchedDown){
+		for (int i = 0; i < 4; i++)
+		{
+			Engines[i]->set_power(upwardsPower);
+		}
+		switchedDown = false;
+		waitToStop = true;
 	}
-	while (((RotaryEntryStates[(back * 2)][0]+1 >= Wheels[0]->get_RSteps()) || (RotaryEntryStates[(back * 2)][1] + 1 >= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] +1 >= Wheels[1]->get_RSteps()) || (RotaryEntryStates[1 + (back * 2)][1] + 1 >= Wheels[1]->get_RRevs())))
+	if (waitToStop && (((RotaryEntryStates[(back * 2)][0]+1 <= Wheels[0]->get_RSteps()) || (RotaryEntryStates[(back * 2)][1] + 1 <= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] +1 <= Wheels[1]->get_RSteps()) || (RotaryEntryStates[1 + (back * 2)][1] + 1 <= Wheels[1]->get_RRevs()))))
 	{
+		for (int i = 0; i < 4; i++)
+		{
+			Engines[i]->set_power(0);
+		}
+		waitToStop = false;
+		switchUp = true;
 	}
-	for (int i = 0; i < 4; i++)
-	{
-		Engines[i]->set_power(0);
+	if (switchUp) {
+		if(Switch[0 + (back * 2)]->up()&&Switch[1 + (back * 2)]->up()){
+			switchUp = false;
+			switchedUp = true;
+		}
 	}
-	Switch[0 + (back * 2)]->up();
-	Switch[1 + (back * 2)]->up();
+	if (switchedUp) {
+		//reset of all function specific bools
+		RoundOne = true;//indicates if we are in the first roundtrip or one of the followuing
+		switchDown = false;//indicates if the C should move down
+		switchedDown = false;//indicates if it has moved down
+		waitToStop = false;// indicates that we are moving and the stop checker is enabled
+		switchUp = false;//tells the c to switch up
+		switchedUp = false;//tels if the Cs are switched up and determines the return
+
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 void C::reset() {
@@ -280,6 +367,26 @@ void C::reset() {
 	timeoutPlease = false;
 	primePos = false;
 	OnTheLine = false;
+
+	//while avoidence reset joust to be shure nothing can be mist
+	//moving everything forward
+	oneStepForward = false;//indicates if the loop is going allready
+	//moving everything backwards
+	oneStepBackward = false;//indicates if the loop is going allready
+	//moving leftside bwd
+ 	oneStepLeftBWD = false;//indicates if the loop is going allready
+	//moving leftside fwd
+	oneStepLeftFWD = false;//indicates if the loop is going allready
+	//moving rightside bwd
+	oneStepRightBWD = false;//indicates if the loop is going allready
+	//moving rightside fwd
+	oneStepRightFWD = false;//indicates if the loop is going allready
+	//bool for ceeping track if we are going up with the front
+	frontUp = false;
+	frontUpMoving = false;
+	//bool for ceeping track if we are going up with the front
+	backUp = false;
+	backUpMoving = false;
 }
 
 //
