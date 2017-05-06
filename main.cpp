@@ -184,6 +184,30 @@ void JoystickWerte()
 	}
 }
 
+int KontrolleEingabe() //soll unlogische Eingaben verhindern
+{
+	if(pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
+	{
+		return 1;
+	}
+
+	if (pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_anAus()) == 0)
+	{
+		return 1;
+	}
+
+	if (pin->WerteLesen(pin->get_Parken()) == 1 && cModule == true)
+	{
+		return 1;
+	}
+
+	if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1 && cModule == true)
+	{
+		return 1;
+	}
+
+	return 0;
+}
 
 int fall()
 {
@@ -193,8 +217,19 @@ int fall()
 		return 6;
 	}
 
+	if (KontrolleEingabe == 1)
+	{
+		return 7;
+	}
+
 	if (pin->WerteLesen(pin->get_Parken()) == 1)
 	{
+
+		if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
+		{
+			return 5;
+		}
+
 		return 0;
 	}
 	else
@@ -212,11 +247,6 @@ int fall()
 		if (cModule == true) 
 		{
 			return 4;
-		}
-
-		if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
-		{
-			return 5;
 		}
 
 		return 2;
@@ -306,6 +336,16 @@ int main()
 				lcm->clear();
 
 				break;
+
+			case 7:
+				LenkungCDrive.parken();
+
+				lcm->clear;
+
+				lcm->write(0, 0, "Auswahl");
+				lcm->write(1, 1, "kontrollieren");
+
+				break;
 		}
 
 		//Zuweisung der Leistungen den Motoren
@@ -315,7 +355,6 @@ int main()
 		case 1:
 		case 2:
 		case 3: 
-
 			MotorA->set_power(LenkungCDrive.get_leistungRadA());
 			MotorB->set_power(LenkungCDrive.get_leistungRadB());
 			MotorC->set_power(LenkungCDrive.get_leistungRadC());
@@ -324,12 +363,19 @@ int main()
 			break;
 
 		case 6:
-			
 			MotorA->set_power(0);
 			MotorB->set_power(0);
 			MotorC->set_power(0);
 			MotorD->set_power(0);
 			
+			MotorCA->set_power(0);
+			MotorCB->set_power(0);
+			MotorCC->set_power(0);
+			MotorCD->set_power(0);
+
+			break;
+
+		default:
 			break;
 		}
 
@@ -340,6 +386,7 @@ int main()
 		{
 			break;
 		}
+
 		//delay(75);
 	}
 
