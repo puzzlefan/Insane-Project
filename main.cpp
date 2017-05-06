@@ -71,9 +71,9 @@ Lenkung LenkungCDrive;
 //Displays
 LCM * lcm = new LCM;
 
-
 //manuelle Lenkung
 manualOverwrite mSteuerung(& lcm,& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& MotorA,& MotorB,& MotorC,& MotorD,& MotorCA,& MotorCB,& MotorCC,& MotorCD,& RotLV,& RotRV,& RotLH,& RotRH);
+
 //Cs
 C * Cs = new C(& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& RotLV,& RotRV,& RotLH,& RotRH, & CDriveA, & CDriveB,& CDriveC,& CDriveD,& MotorA,& MotorB, & MotorC, & MotorD);
 
@@ -185,24 +185,24 @@ void JoystickWerte()
 	}
 }
 
-int KontrolleEingabe() //soll unlogische Eingaben verhindern
+int KontrolleEingabe() //soll unlogische Eingaben verhindern; viele Probleme werden durch die fall zuweisung verhindert/Aufbau der Schalter
 {
-	if(pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
+	if(pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)//Nicht parken + manuelle Steuerung an
 	{
 		return 1;
 	}
 
-	if (pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_anAus()) == 0)
+	if (pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_anAus()) == 0)//Ausschalten ohne das man voher parkt
 	{
 		return 1;
 	}
 
-	if (pin->WerteLesen(pin->get_Parken()) == 1 && cModule == true)
+	if (pin->WerteLesen(pin->get_Parken()) == 1 && cModule == true)//Parken und Hochfahren wollen
 	{
 		return 1;
 	}
 
-	if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1 && cModule == true)
+	if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1 && cModule == true)//manuelle Steuerung + Hochfahren wollen
 	{
 		return 1;
 	}
@@ -380,6 +380,7 @@ int main()
 			break;
 		}
 
+		//Ausgabe auf Bildschirm
 		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
 		std::cout << LenkungCDrive.get_leistungRadA() << "   ,   " << LenkungCDrive.get_leistungRadB() << "   ,   " << LenkungCDrive.get_leistungRadC() << "   ,   " << LenkungCDrive.get_leistungRadD() << std::endl;
 
