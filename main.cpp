@@ -1,19 +1,20 @@
 #include <iostream>  //Grund-Funktionen
 #include <math.h>
+#include <stdlib.h>
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <mcp23017.h>
 #include <softPwm.h>
-#include "rotaryencoder/RotationssensorArduino.h"
 #include "Joystick/joystick.hh" //Klassen zur Verarbeitung von Sensordaten
+#include "rotaryencoder/RotationssensorArduino.h"
 #include "Ultrasonic/libSonar.h"
 #include "Schnittstelle/InterfaceI2C.h" // Schnittstelle
 #include "Lenkung/Lenkung.h" //Generelle Steuerung
+#include "C/C.h"
 #include "manualControl/manuelControl.h"
 #include "switchig/switching.h"//zum feststellen der C-Module
 #include "engine/engine.h" // Klasse um Daten an Motoren weiter zu geben
 #include "Displays/lcm1602.h"//Klasse fuer Displays
-#include "C/C.h"
 
 
 // Erstellen einzelen Objekte aus den Klassen
@@ -382,6 +383,7 @@ int main()
 		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
 		std::cout << LenkungCDrive.get_leistungRadA() << "   ,   " << LenkungCDrive.get_leistungRadB() << "   ,   " << LenkungCDrive.get_leistungRadC() << "   ,   " << LenkungCDrive.get_leistungRadD() << std::endl;
 
+		//Abbruchfunktion
 		if (NOTAUS == true || pin->WerteLesen(pin->get_anAus()) == 1)
 		{
 			break;
@@ -404,7 +406,6 @@ int main()
 		lcm->clear();
 	}
 
-	//Funktion Pi herunterfahren
 
 	return 0;
 }
