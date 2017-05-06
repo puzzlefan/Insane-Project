@@ -217,7 +217,7 @@ int fall()
 		return 6;
 	}
 
-	if (KontrolleEingabe == 1)
+	if (KontrolleEingabe() == 1)
 	{
 		return 7;
 	}
@@ -340,7 +340,7 @@ int main()
 			case 7:
 				LenkungCDrive.parken();
 
-				lcm->clear;
+				lcm->clear();
 
 				lcm->write(0, 0, "Auswahl");
 				lcm->write(1, 1, "kontrollieren");
@@ -390,9 +390,9 @@ int main()
 		//delay(75);
 	}
 
-	if (pin->WerteLesen(pin->get_anAus()) == 1)
+	if (pin->WerteLesen(pin->get_anAus()) == 1)//Endkommentar
 	{
-		lcm->clear;
+		lcm->clear();
 		lcm->write(0, 0, "Auf Wiedersehen");
 		
 		delay(1000);
@@ -401,7 +401,7 @@ int main()
 		
 		delay(3000);
 		
-		lcm->clear;
+		lcm->clear();
 	}
 
 	//Funktion Pi herunterfahren
