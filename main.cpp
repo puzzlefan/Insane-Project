@@ -406,6 +406,7 @@ int main()
 		lcm->clear();
 	}
 
+	system("sudo shutdown -h now"); //zum heruterfahren des Pis
 
 	return 0;
 }

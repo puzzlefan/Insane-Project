@@ -1,6 +1,6 @@
 include ../Makefile.rules
 
-OBJ     = Rotationssensor.o
+OBJ     = Rotationssensor.o  RotatiosnssensorArduino.o
 
 all: $(OBJ)
 
