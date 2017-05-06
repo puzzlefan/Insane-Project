@@ -394,7 +394,14 @@ int main()
 	{
 		lcm->clear;
 		lcm->write(0, 0, "Auf Wiedersehen");
+		
 		delay(1000);
+		
+		lcm->write(1, 1, "Herunterfahren");
+		
+		delay(3000);
+		
+		lcm->clear;
 	}
 
 	//Funktion Pi herunterfahren
