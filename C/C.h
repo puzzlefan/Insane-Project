@@ -71,7 +71,7 @@ private:
 public:
 	C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt, Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt, Rotationssensor ** wlf, Rotationssensor ** wrf, Rotationssensor ** wlb, Rotationssensor ** wrb, switching ** svl, switching ** svr, switching ** sbl, switching ** sbr, engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr);//gets the values needed to use the Claas, (Z.B. lenkung; Motoren, Switching, Ultraschälle, Rotatiosensoren...
 	void UP();//starts the C up sequence
-	void DOWN();//starts the C don sequence
+	void DOWN();//starts the C down sequence
 
 	void set_pause() { timeoutPlease = true; }
 	void set_end() { cryer = true; }
