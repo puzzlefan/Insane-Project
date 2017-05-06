@@ -83,6 +83,7 @@ int zAchse = 0;
 int DLR = 0;
 int DTB = 0;
 bool cModule = false;
+bool NOTAUS = false;
 
 
 void SetUp()
@@ -159,7 +160,7 @@ void JoystickWerte()
 			}
 		}
 
-		if(Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren über die C-Module
+		if(Event.isButton() || Cs->getOnlineStat())//Warten auf das Signal zu hochfahren über die C-Module
 		{
 			if(Event.number == 3 && Event.value == 1)
 			{
@@ -170,10 +171,14 @@ void JoystickWerte()
 		{
 			cModule = false;
 		}
-		if(Event.number == 0){
+
+		if(Event.number == 0)
+		{
 			Cs->set_end();
 		}
-		if(Event.number == 1){
+
+		if(Event.number == 1)
+		{
 			Cs->set_pause();
 		}
 	}
@@ -182,9 +187,12 @@ void JoystickWerte()
 
 int fall()
 {
-	if (Cs->getOnlineStat()){
-		return 4;
+	if (pin->WerteLesen(pin->get_pinNotaus()) == 0)
+	{
+		NOTAUS = true;
+		return 6;
 	}
+
 	if (pin->WerteLesen(pin->get_Parken()) == 1)
 	{
 		return 0;
@@ -281,14 +289,12 @@ int main()
 				break;
 			
 			case 4:
-				//C-Klasse aufrufe
+				Cs->UP();
 
 				lcm->clear();
 
 				lcm->write(0, 0, "Fahrtmodus:");
 				lcm->write(3, 1, "Hochfahren");
-
-				Cs->UP();
 
 				break;
 			
@@ -299,36 +305,52 @@ int main()
 
 				lcm->clear();
 
-				//lcm.write(0, 0, mSterueung.Was auch immer hier Stehen soll);
-				//lcm.write(0, 1, );
-
 				break;
 		}
 
 		//Zuweisung der Leistungen den Motoren
 		switch (fall())
-		{
-			case 4:
-				//c-klasse motoren zuweisung
-				break;
+		{	
+		case 0:
+		case 1:
+		case 2:
+		case 3: 
 
-			case 5:
-				//manualControl zuweisung
-				break;
+			MotorA->set_power(LenkungCDrive.get_leistungRadA());
+			MotorB->set_power(LenkungCDrive.get_leistungRadB());
+			MotorC->set_power(LenkungCDrive.get_leistungRadC());
+			MotorD->set_power(LenkungCDrive.get_leistungRadD());
+			
+			break;
 
-			default:
-				MotorA->set_power(LenkungCDrive.get_leistungRadA());
-				MotorB->set_power(LenkungCDrive.get_leistungRadB());
-				MotorC->set_power(LenkungCDrive.get_leistungRadC());
-				MotorD->set_power(LenkungCDrive.get_leistungRadD());
-				break;
+		case 6:
+			
+			MotorA->set_power(0);
+			MotorB->set_power(0);
+			MotorC->set_power(0);
+			MotorD->set_power(0);
+			
+			break;
 		}
 
 		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
-		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
+		std::cout << LenkungCDrive.get_leistungRadA() << "   ,   " << LenkungCDrive.get_leistungRadB() << "   ,   " << LenkungCDrive.get_leistungRadC() << "   ,   " << LenkungCDrive.get_leistungRadD() << std::endl;
 
+		if (NOTAUS == true || pin->WerteLesen(pin->get_anAus()) == 1)
+		{
+			break;
+		}
 		//delay(75);
 	}
+
+	if (pin->WerteLesen(pin->get_anAus()) == 1)
+	{
+		lcm->clear;
+		lcm->write(0, 0, "Auf Wiedersehen");
+		delay(1000);
+	}
+
+	//Funktion Pi herunterfahren
 
 	return 0;
 }

@@ -7,8 +7,8 @@
 class Schnittstelle
 {
 private:
-	//NEW
-
+	
+	//Variablen für Rotationssensorenklasse
 	int AdresseRotationsArduino = 0x03;
 	int ConnectionToken;
 
@@ -21,6 +21,7 @@ private:
 	int RegRevsLH = 7;
 	int RegStepsRH = 8;
 	int RegRevsRH = 9;
+
 	// Variablen für die einzelnen Sensoren; geben die PinNr. an
 	int rvUltraschallsensorEcho1 = 100 + 8;
 	int rvUltraschallsensorEcho2 = 100 + 9;
@@ -55,6 +56,7 @@ private:
 	int fahrtModiNormalesFahren = 200 + 9;
 	int fahrtModiDrehen = 200 + 10;
 	int manuelleSteuerung = 200 + 11;
+	int anAus = 200 + 12;
 
 	//Variablen für die Motoren; geben die PinNr. an
 	int RadAf = 7;
@@ -82,14 +84,14 @@ private:
 	int cRadDf = 4;
 	int cRadDb = 5;
 
+	//Notaus
+	int pinNotaus = 29;
+
 public:
 	void InterfaceSetUp();
 	void WerteSchreiben(int pin, int Wert);
 	int WerteLesen(int pin);
 
-	//
-	//NEU
-	//
 	void I2C8Write(int token, int Register, int Wert);
 	void I2C16Write(int token, int Register, int Wert);
 	int I2C8Read(int token, int Register);
@@ -107,10 +109,6 @@ public:
 	int get_RegRevsLH() { return RegRevsLH; }
 	int get_RegStepsRH() { return RegStepsRH; }
 	int get_RegRevsRH() { return RegRevsRH; }
-
-	//
-	//ALT
-	//
 
 	int get_rvUltraschallsensorEcho1() { return rvUltraschallsensorEcho1; }
 	int get_rvUltraschallsensorEcho2() { return rvUltraschallsensorEcho2; }
@@ -144,6 +142,7 @@ public:
 	int get_fahrtModiNormalesFahren() { return fahrtModiNormalesFahren; }
 	int get_fahrtModiDrehen() { return fahrtModiDrehen; }
 	int get_manuelleSteuerung() { return manuelleSteuerung; }
+	int get_anAus() { return anAus; }
 
 	int get_RadAf() { return RadAf; }
 	int get_RadAb() { return RadAb; }
@@ -162,6 +161,8 @@ public:
 	int get_cRadCb() { return cRadCb; }
 	int get_cRadDf() { return cRadDf; }
 	int get_cRadDb() { return cRadDb; }
+
+	int get_pinNotaus() { return pinNotaus; }
 };
 
 #endif
