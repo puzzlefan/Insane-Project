@@ -173,12 +173,12 @@ void JoystickWerte()
 			cModule = false;
 		}
 
-		if(Event.number == 0)
+		if(Event.number == 5 && Event.value == 1)
 		{
 			Cs->set_end();
 		}
 
-		if(Event.number == 1)
+		if(Event.number == 4 && Event.value == 1)
 		{
 			Cs->set_pause();
 		}
