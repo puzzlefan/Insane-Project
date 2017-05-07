@@ -60,7 +60,7 @@ private:
 	double maxSchraegHoehe[2];
 	
 	//while avoidence
-	bool RoundOne = true;//indicates if this is the first roundtrip through the function
+	bool FirstRound = true;//indicates if this is the first roundtrip through the function
 	//moving everything forward
 	bool oneStepForward = false;//indicates if the loop is going allready
 	int oneStepForwardlastRL;//reference value for the rigthside Rotationsensors
