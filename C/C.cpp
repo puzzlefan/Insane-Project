@@ -77,9 +77,9 @@ void C::UP() {
 			}
 		}
 
-		if (!(needetDistance - accuracy <= USm[0][0] &&  USm[0][0] <= needetDistance + accuracy) && !(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))//Checks , if no Sensor is matching the wanted distance
+		if ((!(needetDistance - accuracy <= USm[0][0] &&  USm[0][0] <= needetDistance + accuracy) && !(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))||((oneStepForward||oneStepBackward) && !(oneStepLeftFWD||oneStepLeftBWD||oneStepRightFWD||oneStepRightBWD)))//Checks , if no Sensor is matching the wanted distance
 		{
-			if (needetDistance - accuracy <= USm[0][0])//if the distance is greater then the wanted distance it shoul move everything one rotationstep further
+			if ((needetDistance - accuracy <= USm[0][0] && needetDistance - accuracy <= USm[1][0])||oneStepForward)//if the distance is greater then the wanted distance it shoul move everything one rotationstep further
 			{
 
 				if (!oneStepForward) {
@@ -91,7 +91,7 @@ void C::UP() {
 					oneStepForwardlastRR = lastRotr;
 					oneStepForwardlastRL = lastRotl;
 				}
-
+				//when you have time you should stop the left and rigth side individual
 				if(Wheels[0]->get_RSteps() >= oneStepForwardlastRL + 1 && Wheels[1]->get_RSteps() >= oneStepForwardlastRR + 1 && oneStepForward) {//waits for the movement of one step
 					for (int i = 0; i < 4; i++)//stops all engines
 					{
@@ -100,7 +100,7 @@ void C::UP() {
 					oneStepForward = false;
 				}
 			}
-			else//if the distance is to small everything moves back
+			if ((needetDistance + accuracy >= USm[0][0] && needetDistance + accuracy >= USm[1][0])||oneStepBackward)//if the distance is to small everything moves back
 			{
 				if (!oneStepBackward) {
 					for (int i = 0; i < 4; i++)//same for other direction
@@ -111,6 +111,7 @@ void C::UP() {
 					oneStepBackwardlastRR = lastRotr;
 					oneStepBackwardlastRL = lastRotl;
 				}
+				//when you have time you should stop the left and rigth side individual
 				if(Wheels[0]->get_RSteps() <= oneStepBackwardlastRL - 1 && Wheels[1]->get_RSteps() <= oneStepBackwardlastRR - 1) {
 					for (int i = 0; i < 4; i++)
 					{
@@ -122,9 +123,9 @@ void C::UP() {
 		}
 		else//if at least one Sensor matches the wanted distance
 		{
-			if (!(needetDistance - accuracy <= USm[0][0] && USm[0][0] <= needetDistance + accuracy))//Checks if the left Sensor is matching
+			if ((!(needetDistance - accuracy <= USm[0][0] && USm[0][0] <= needetDistance + accuracy))||oneStepLeftFWD||oneStepLeftBWD)//Checks if the left Sensor is matching
 			{
-				if (needetDistance - accuracy < USm[0][0])//if it is not matching the distance got shrinked by one step on this side
+				if (needetDistance - accuracy < USm[0][0]||(oneStepLeftFWD&&!oneStepLeftBWD))//if it is not matching the distance got shrinked by one step on this side
 				{
 					if (!oneStepLeftFWD) {
 						for (int i = 0; i < 2; i++)//gets al engines for this direction going
@@ -161,9 +162,9 @@ void C::UP() {
 				}
 			}
 			else {//if the left sensor is not matching
-				if (!(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))//it checks the other side
+				if (!(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy)||oneStepRightFWD||oneStepRightBWD)//it checks the other side
 				{
-					if (needetDistance - accuracy < USm[1][0])//same just for the other side
+					if (needetDistance - accuracy < USm[1][0]||(oneStepRightFWD&&!oneStepRightBWD))//same just for the other side
 					{
 						if (!oneStepRightFWD) {
 							for (int i = 0; i < 2; i++)//same ...
