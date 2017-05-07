@@ -48,6 +48,17 @@ C::C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar
 void C::UP() {
 
 	//CHECK BOOLS
+	if (RoundOne)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			Wheels[i]->resetSteps(i * 2 + 2);
+			Wheels[i]->read();
+			RotaryEntryStatesforBack[i][0] = Wheels[i]->get_Steps();
+			RotaryEntryStatesforBack[i][1] = Wheels[i]->get_Revs();
+		}
+		RoundOne = false;	
+	}
 	if (!OnTheLine)
 	{
 		OnTheLine = true;
@@ -370,6 +381,7 @@ void C::reset() {
 	OnTheLine = false;
 
 	//while avoidence reset joust to be shure nothing can be mist
+	RoundOne = true;
 	//moving everything forward
 	oneStepForward = false;//indicates if the loop is going allready
 	//moving everything backwards
