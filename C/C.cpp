@@ -241,12 +241,16 @@ void C::UP() {
 
 	//upwards movement
 	if (primePos) {
-		for (int i = 0; i < 4; i++)
+		if(FirstPrimeRound)
 		{
-			Wheels[i]->resetSteps(i * 2 + 2);
-			Wheels[i]->read();
-			RotaryEntryStatesforBack[i][0] = Wheels[i]->get_Steps();
-			RotaryEntryStatesforBack[i][1] = Wheels[i]->get_Revs();
+			for (int i = 0; i < 4; i++)
+			{
+				Wheels[i]->resetSteps(i * 2 + 2);
+				Wheels[i]->read();
+				RotaryEntryStatesforBack[i][0] = Wheels[i]->get_Steps();
+				RotaryEntryStatesforBack[i][1] = Wheels[i]->get_Revs();
+			}
+			FirstPrimeRound = false;
 		}
 		if(!frontUp){//runs upper until front up gets positive
 			frontUpMoving = true;
@@ -382,6 +386,7 @@ void C::reset() {
 
 	//while avoidence reset joust to be shure nothing can be mist
 	FirstRound  = true;
+	FirstPrimeRound = true;
 	//moving everything forward
 	oneStepForward = false;//indicates if the loop is going allready
 	//moving everything backwards
