@@ -161,26 +161,26 @@ void JoystickWerte()
 			}
 		}
 
-		if(Event.isButton() || Cs->getOnlineStat())//Warten auf das Signal zu hochfahren über die C-Module
+		if(Event.isButton())//Warten auf das Signal zu hochfahren über die C-Module
 		{
 			if(Event.number == 3 && Event.value == 1)
 			{
 				cModule = true;
 			}
-		}
-		else
-		{
-			cModule = false;
-		}
-
-		if(Event.number == 5 && Event.value == 1)
-		{
-			Cs->set_end();
-		}
-
-		if(Event.number == 4 && Event.value == 1)
-		{
-			Cs->set_pause();
+			else
+			{
+				cModule = false;
+			}
+	
+			if(Event.number == 5 && Event.value == 1)
+			{
+				Cs->set_end();
+			}
+	
+			if(Event.number == 4 && Event.value == 1)
+			{
+				Cs->set_pause();
+			}
 		}
 	}
 }
@@ -217,7 +217,12 @@ int fall()
 		NOTAUS = true;
 		return 6;
 	}
-
+	
+	if ((cModule == true && pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 0)|| Cs->getOnlineStat()) 
+	{
+		return 4;
+	}
+	
 	if (KontrolleEingabe() == 1)
 	{
 		return 7;
@@ -245,11 +250,6 @@ int fall()
 			return 3;
 		}
 		
-		if (cModule == true) 
-		{
-			return 4;
-		}
-
 		return 2;
 	}
 }
