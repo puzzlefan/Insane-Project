@@ -61,6 +61,7 @@ private:
 	
 	//while avoidence
 	bool FirstRound = true;//indicates if this is the first roundtrip through the function
+	bool FirstPrimeRound = true; // indicates that this is the first run through the prime pos chapter
 	//moving everything forward
 	bool oneStepForward = false;//indicates if the loop is going allready
 	int oneStepForwardlastRL;//reference value for the rigthside Rotationsensors
