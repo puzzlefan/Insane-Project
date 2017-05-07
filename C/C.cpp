@@ -300,7 +300,7 @@ void C::UP() {
 			//disables pause until we are complete
 			KeepGoing = true;
 
-			if (!backUp) {
+			if ((!backUp && backUpMoving)||(!backUp && Engines[0]->get_power() == 0 && Engines[2]->get_power() == 0)) {
 				backUpMoving = true;
 				if (upper(true)) {//moves forward until the back is also on the curb
 					KeepGoing = false; // allow pause if you can hit the Switch erly enoug, which is logically impossible but how cares
@@ -324,7 +324,7 @@ bool C::upper(bool back) {
 			RotaryEntryStates[i][0] = Wheels[i]->get_Steps();
 			RotaryEntryStates[i][1] = Wheels[i]->get_Revs();
 		}
-		afterRoundOne = false;
+		RoundOne = false;
 		switchDown = true;
 	}
 	if (switchDown) {
@@ -344,7 +344,7 @@ bool C::upper(bool back) {
 		switchedDown = false;
 		waitToStop = true;
 	}
-	if (waitToStop && (((RotaryEntryStates[(back * 2)][0]+1 <= Wheels[0]->get_RSteps()) || (RotaryEntryStates[(back * 2)][1] + 1 <= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] +1 <= Wheels[1]->get_RSteps()) || (RotaryEntryStates[1 + (back * 2)][1] + 1 <= Wheels[1]->get_RRevs()))))
+	if (waitToStop && (((RotaryEntryStates[(back * 2)][0] <= Wheels[0]->get_RSteps()) && (RotaryEntryStates[(back * 2)][1] + 1 <= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] <= Wheels[1]->get_RSteps()) && (RotaryEntryStates[1 + (back * 2)][1] + 1 <= Wheels[1]->get_RRevs()))))
 	{
 		for (int i = 0; i < 4; i++)
 		{
