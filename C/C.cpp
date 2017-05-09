@@ -9,33 +9,40 @@ C::C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar
 	fUS[0][0] = *flb;
 	fUS[0][1] = *flm;
 	fUS[0][2] = *flt;
+
 	//brings the rigth ultra sonic sensors in position
 	fUS[1][0] = *frb;
 	fUS[1][1] = *frm;
 	fUS[1][2] = *frt;
+
 	//brings the left ultra sonic back sensors in position
 	bUS[0][0] = *blb;
 	bUS[0][1] = *blm;
 	bUS[0][2] = *blt;
+
 	//brings the rigth ultra sonic back sensors in position
 	bUS[1][0] = *brb;
 	bUS[1][1] = *brm;
 	bUS[1][2] = *brt;
+
 	//brings the Switches in position
 	Switch[0] = *svl;
 	Switch[1] = *svr;
 	Switch[2] = *sbl;
 	Switch[3] = *sbr;
+
 	//brings the engines in position
 	Engines[0] = *rvl;
 	Engines[1] = *rvr;
 	Engines[2] = *rbl;
 	Engines[3] = *rbr;
+
 	//brings the rotation sensors in position
 	Wheels[0] = *wlf;
 	Wheels[1] = *wrf;
 	Wheels[2] = *wlb;
 	Wheels[3] = *wrb;
+
 	//					-Anbringungshoehe-needetDistance tan(Maximal Winkel fuer Steigung)
 	//Maxschraeghoehe	=	----------------------------------------------------------------
 	//					tam(NeigungswinkelSensor) - tan(Maxiaml Winkel fuer Steigung)
@@ -52,11 +59,13 @@ void C::UP() {
 	{
 		OnTheLine = true;
 	}
+
 	if (!KeepGoing&&timeoutPlease)// if the process can be paused and somebody wants to pause it just returns and waits for the next round, but the rutine is stil in loop
 	{
 		timeoutPlease = false;
 		return;
 	}
+
 	if (!NoWayBack&&cryer)
 	{
 		reset();
@@ -85,7 +94,10 @@ void C::UP() {
 				{
 					(*Engines[i]).set_power(maneuverPower);
 				}
-				while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}//waits for the movement of one step
+
+				while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) 
+				{}//waits for the movement of one step
+
 				for (int i = 0; i < 4; i++)//stops all engines
 				{
 					(*Engines[i]).set_power(0);
@@ -97,7 +109,10 @@ void C::UP() {
 				{
 					(*Engines[i]).set_power(-maneuverPower);
 				}
-				while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
+
+				while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) 
+				{}
+
 				for (int i = 0; i < 4; i++)
 				{
 					(*Engines[i]).set_power(0);
@@ -114,7 +129,10 @@ void C::UP() {
 					{
 						(*Engines[i * 2]).set_power(maneuverPower);
 					}
-					while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}//waits for the step
+
+					while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) 
+					{}//waits for the step
+
 					for (int i = 0; i < 2; i++)//gets all the engines going in the direction stoping
 					{
 						(*Engines[i * 2]).set_power(0);
@@ -125,7 +143,10 @@ void C::UP() {
 					{
 						(*Engines[i * 2]).set_power(-maneuverPower);
 					}
-					while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
+
+					while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) 
+					{}
+
 					for (int i = 0; i < 2; i++)
 					{
 						(*Engines[i * 2]).set_power(0);
@@ -141,7 +162,10 @@ void C::UP() {
 						{
 							(*Engines[i * 2 + 1]).set_power(maneuverPower);
 						}
-						while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) {}
+					
+						while (Wheels[0]->get_RSteps() < lastRotl + 1 && Wheels[1]->get_RSteps() < lastRotr + 1) 
+						{}
+						
 						for (int i = 0; i < 2; i++)
 						{
 							(*Engines[1 + i * 2]).set_power(0);
@@ -152,7 +176,10 @@ void C::UP() {
 						{
 							(*Engines[i * 2 + 1]).set_power(-maneuverPower);
 						}
-						while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) {}
+						
+						while (Wheels[0]->get_RSteps() > lastRotl - 1 && Wheels[1]->get_RSteps() > lastRotr - 1) 
+						{}
+						
 						for (int i = 0; i < 2; i++)
 						{
 							(*Engines[1 + i * 2]).set_power(0);
@@ -168,6 +195,7 @@ void C::UP() {
 						reset();
 						return;
 					}
+					
 					//  same for top Sensor (needs to measure earlier to)
 					if ((maxSchraegHoehe[0]+accuracy > fUS[0][2]->calcHeigth(timeout) && fUS[0][2]->calcHeigth(timeout) > possibleHigth + accuracy )|| (maxSchraegHoehe[0] + accuracy > fUS[1][2]->calcHeigth(timeout) && fUS[1][2]->calcHeigth(timeout) > possibleHigth + accuracy))
 					{
@@ -175,6 +203,7 @@ void C::UP() {
 						reset();
 						return;
 					}
+					
 					//	When we allready passed this one once we wont do it again until a new curb arrives
 					//	point of no return
 					NoWayBack = true;
@@ -221,6 +250,7 @@ void C::UP() {
 				Engines[i*2]->set_power(0);
 			}
 		}
+		
 		//rigth
 		if (distanceAxes >= Wheels[3]->get_distanceFromThenToNow(RotaryEntryStatesforBack[3][0], RotaryEntryStatesforBack[3][1]))
 		{
@@ -248,26 +278,29 @@ void C::upper(bool back) {
 	//switch front
 	Switch[0 + (back*2)]->down();
 	Switch[1 + (back * 2)]->down();
-	//safe the initial state of all rotations
 
+	//safe the initial state of all rotations
 	for (int i = 0; i < 4; i++)
 	{
 		Wheels[i]->read();
 		RotaryEntryStates[i][0] = Wheels[i]->get_Steps();
 		RotaryEntryStates[i][1] = Wheels[i]->get_Revs();
 	}
+	
 	//move forward until we can switch again
 	for (int i = 0; i < 4; i++)
 	{
 		Engines[i]->set_power(upwardsPower);
 	}
+
 	while (((RotaryEntryStates[(back * 2)][0]+1 >= Wheels[0]->get_RSteps()) || (RotaryEntryStates[(back * 2)][1] + 1 >= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] +1 >= Wheels[1]->get_RSteps()) || (RotaryEntryStates[1 + (back * 2)][1] + 1 >= Wheels[1]->get_RRevs())))
-	{
-	}
+	{}
+
 	for (int i = 0; i < 4; i++)
 	{
 		Engines[i]->set_power(0);
 	}
+	
 	Switch[0 + (back * 2)]->up();
 	Switch[1 + (back * 2)]->up();
 }
