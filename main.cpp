@@ -70,9 +70,9 @@ Lenkung LenkungCDrive;
 //Displays
 LCM * lcm = new LCM;
 
-
 //manuelle Lenkung
 manualOverwrite mSteuerung(& lcm,& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& MotorA,& MotorB,& MotorC,& MotorD,& MotorCA,& MotorCB,& MotorCC,& MotorCD,& RotLV,& RotRV,& RotLH,& RotRH);
+
 //Cs
 C * Cs = new C(& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& RotLV,& RotRV,& RotLH,& RotRH, & CDriveA, & CDriveB,& CDriveC,& CDriveD,& MotorA,& MotorB, & MotorC, & MotorD);
 
@@ -122,6 +122,8 @@ void SetUp()
 	MotorCD->initialisEngine(pin->get_cRadDf(), pin->get_cRadDb());
 
 	//"Output" auf Display
+	lcm->clear();
+
 	lcm->write(1, 0, "SetUp fertig!");
 	lcm->write(2, 1, "Gute Fahrt!");
 
