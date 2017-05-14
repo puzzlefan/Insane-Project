@@ -10,7 +10,7 @@ class Lenkung
 private:
 	//feste Werte
 	double dampfung = 0.5;//Damit beim drehen keine 100% Motorauslastung
-	double lamda  = 0.5; //Faktor um faktorBremsen zu reduzieren
+	double lamda  = 0.0005; //Faktor um faktorBremsen zu reduzieren
 		
 	//zu berechnende Werte 
 	double langeLeistung;//aktuelle Gesamtleistung
