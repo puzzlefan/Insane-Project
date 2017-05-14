@@ -163,7 +163,7 @@ void JoystickWerte()
 			}
 		}
 
-		if(Event.isButton())//oder Timons Variable //Warten auf das Signal zu hochfahren über die C-Module
+		if(Event.isButton())//Warten auf das Signal zu hochfahren über die C-Module
 		{
 			if(Event.number == 3 && Event.value == 1)
 			{
@@ -383,6 +383,7 @@ int main()
 				break;
 		}
 
+		//Ausgabe auf Bildschirm
 		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
 		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
 
