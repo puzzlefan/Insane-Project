@@ -48,6 +48,17 @@ C::C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar
 void C::UP() {
 
 	//CHECK BOOLS
+	if (FirstRound )
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			Wheels[i]->resetSteps(i * 2 + 2);
+			Wheels[i]->read();
+			RotaryEntryStatesforBack[i][0] = Wheels[i]->get_Steps();
+			RotaryEntryStatesforBack[i][1] = Wheels[i]->get_Revs();
+		}
+		FirstRound  = false;	
+	}
 	if (!OnTheLine)
 	{
 		OnTheLine = true;
@@ -77,9 +88,9 @@ void C::UP() {
 			}
 		}
 
-		if (!(needetDistance - accuracy <= USm[0][0] &&  USm[0][0] <= needetDistance + accuracy) && !(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))//Checks , if no Sensor is matching the wanted distance
+		if ((!(needetDistance - accuracy <= USm[0][0] &&  USm[0][0] <= needetDistance + accuracy) && !(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))||((oneStepForward||oneStepBackward) && !(oneStepLeftFWD||oneStepLeftBWD||oneStepRightFWD||oneStepRightBWD)))//Checks , if no Sensor is matching the wanted distance
 		{
-			if (needetDistance - accuracy <= USm[0][0])//if the distance is greater then the wanted distance it shoul move everything one rotationstep further
+			if ((needetDistance - accuracy <= USm[0][0] && needetDistance - accuracy <= USm[1][0])||oneStepForward)//if the distance is greater then the wanted distance it shoul move everything one rotationstep further
 			{
 
 				if (!oneStepForward) {
@@ -91,7 +102,7 @@ void C::UP() {
 					oneStepForwardlastRR = lastRotr;
 					oneStepForwardlastRL = lastRotl;
 				}
-
+				//when you have time you should stop the left and rigth side individual
 				if(Wheels[0]->get_RSteps() >= oneStepForwardlastRL + 1 && Wheels[1]->get_RSteps() >= oneStepForwardlastRR + 1 && oneStepForward) {//waits for the movement of one step
 					for (int i = 0; i < 4; i++)//stops all engines
 					{
@@ -100,7 +111,7 @@ void C::UP() {
 					oneStepForward = false;
 				}
 			}
-			else//if the distance is to small everything moves back
+			if ((needetDistance + accuracy >= USm[0][0] && needetDistance + accuracy >= USm[1][0])||oneStepBackward)//if the distance is to small everything moves back
 			{
 				if (!oneStepBackward) {
 					for (int i = 0; i < 4; i++)//same for other direction
@@ -111,6 +122,7 @@ void C::UP() {
 					oneStepBackwardlastRR = lastRotr;
 					oneStepBackwardlastRL = lastRotl;
 				}
+				//when you have time you should stop the left and rigth side individual
 				if(Wheels[0]->get_RSteps() <= oneStepBackwardlastRL - 1 && Wheels[1]->get_RSteps() <= oneStepBackwardlastRR - 1) {
 					for (int i = 0; i < 4; i++)
 					{
@@ -122,9 +134,9 @@ void C::UP() {
 		}
 		else//if at least one Sensor matches the wanted distance
 		{
-			if (!(needetDistance - accuracy <= USm[0][0] && USm[0][0] <= needetDistance + accuracy))//Checks if the left Sensor is matching
+			if ((!(needetDistance - accuracy <= USm[0][0] && USm[0][0] <= needetDistance + accuracy))||oneStepLeftFWD||oneStepLeftBWD)//Checks if the left Sensor is matching
 			{
-				if (needetDistance - accuracy < USm[0][0])//if it is not matching the distance got shrinked by one step on this side
+				if (needetDistance - accuracy < USm[0][0]||(oneStepLeftFWD&&!oneStepLeftBWD))//if it is not matching the distance got shrinked by one step on this side
 				{
 					if (!oneStepLeftFWD) {
 						for (int i = 0; i < 2; i++)//gets al engines for this direction going
@@ -161,9 +173,9 @@ void C::UP() {
 				}
 			}
 			else {//if the left sensor is not matching
-				if (!(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy))//it checks the other side
+				if (!(needetDistance - accuracy <= USm[1][0] && USm[1][0] <= needetDistance + accuracy)||oneStepRightFWD||oneStepRightBWD)//it checks the other side
 				{
-					if (needetDistance - accuracy < USm[1][0])//same just for the other side
+					if (needetDistance - accuracy < USm[1][0]||(oneStepRightFWD&&!oneStepRightBWD))//same just for the other side
 					{
 						if (!oneStepRightFWD) {
 							for (int i = 0; i < 2; i++)//same ...
@@ -229,12 +241,16 @@ void C::UP() {
 
 	//upwards movement
 	if (primePos) {
-		for (int i = 0; i < 4; i++)
+		if(FirstPrimeRound)
 		{
-			Wheels[i]->resetSteps(i * 2 + 2);
-			Wheels[i]->read();
-			RotaryEntryStatesforBack[i][0] = Wheels[i]->get_Steps();
-			RotaryEntryStatesforBack[i][1] = Wheels[i]->get_Revs();
+			for (int i = 0; i < 4; i++)
+			{
+				Wheels[i]->resetSteps(i * 2 + 2);
+				Wheels[i]->read();
+				RotaryEntryStatesforBack[i][0] = Wheels[i]->get_Steps();
+				RotaryEntryStatesforBack[i][1] = Wheels[i]->get_Revs();
+			}
+			FirstPrimeRound = false;
 		}
 		if(!frontUp){//runs upper until front up gets positive
 			frontUpMoving = true;
@@ -284,7 +300,7 @@ void C::UP() {
 			//disables pause until we are complete
 			KeepGoing = true;
 
-			if (!backUp) {
+			if ((!backUp && backUpMoving)||(!backUp && Engines[0]->get_power() == 0 && Engines[2]->get_power() == 0)) {
 				backUpMoving = true;
 				if (upper(true)) {//moves forward until the back is also on the curb
 					KeepGoing = false; // allow pause if you can hit the Switch erly enoug, which is logically impossible but how cares
@@ -308,7 +324,7 @@ bool C::upper(bool back) {
 			RotaryEntryStates[i][0] = Wheels[i]->get_Steps();
 			RotaryEntryStates[i][1] = Wheels[i]->get_Revs();
 		}
-		afterRoundOne = false;
+		RoundOne = false;
 		switchDown = true;
 	}
 	if (switchDown) {
@@ -328,7 +344,7 @@ bool C::upper(bool back) {
 		switchedDown = false;
 		waitToStop = true;
 	}
-	if (waitToStop && (((RotaryEntryStates[(back * 2)][0]+1 <= Wheels[0]->get_RSteps()) || (RotaryEntryStates[(back * 2)][1] + 1 <= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] +1 <= Wheels[1]->get_RSteps()) || (RotaryEntryStates[1 + (back * 2)][1] + 1 <= Wheels[1]->get_RRevs()))))
+	if (waitToStop && (((RotaryEntryStates[(back * 2)][0] <= Wheels[0]->get_RSteps()) && (RotaryEntryStates[(back * 2)][1] + 1 <= Wheels[0]->get_RRevs())) && ((RotaryEntryStates[1 + (back * 2)][0] <= Wheels[1]->get_RSteps()) && (RotaryEntryStates[1 + (back * 2)][1] + 1 <= Wheels[1]->get_RRevs()))))
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -369,6 +385,8 @@ void C::reset() {
 	OnTheLine = false;
 
 	//while avoidence reset joust to be shure nothing can be mist
+	FirstRound  = true;
+	FirstPrimeRound = true;
 	//moving everything forward
 	oneStepForward = false;//indicates if the loop is going allready
 	//moving everything backwards

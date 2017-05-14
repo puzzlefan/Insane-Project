@@ -58,8 +58,10 @@ private:
 	//caculatet consts
 	const double	lengthDifMidLow = sin((2 * M_PI) - (DegreeToRad * maxAngle)) * (heigthMiddel - heigthLowest);// distance difference that is needet to define something as a slope
 	double maxSchraegHoehe[2];
-
+	
 	//while avoidence
+	bool FirstRound = true;//indicates if this is the first roundtrip through the function
+	bool FirstPrimeRound = true; // indicates that this is the first run through the prime pos chapter
 	//moving everything forward
 	bool oneStepForward = false;//indicates if the loop is going allready
 	int oneStepForwardlastRL;//reference value for the rigthside Rotationsensors
