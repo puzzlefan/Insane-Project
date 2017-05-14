@@ -32,13 +32,13 @@ Sonar * rvUltraschallsensor3 = new Sonar;
 Sonar * lvUltraschallsensor1 = new Sonar;
 Sonar * lvUltraschallsensor2 = new Sonar;
 Sonar * lvUltraschallsensor3 = new Sonar;
-
+/*
 Sonar * rhUltraschallsensor1 = new Sonar;
 Sonar * rhUltraschallsensor2 = new Sonar;
 Sonar * rhUltraschallsensor3 = new Sonar;
 Sonar * lhUltraschallsensor1 = new Sonar;
 Sonar * lhUltraschallsensor2 = new Sonar;
-Sonar * lhUltraschallsensor3 = new Sonar;
+Sonar * lhUltraschallsensor3 = new Sonar;*/
 
 //Motoren
 engine * MotorA = new engine;
@@ -83,6 +83,7 @@ int zAchse = 0;
 int DLR = 0;
 int DTB = 0;
 bool cModule = false;
+bool NOTAUS = false;
 
 
 void SetUp()
@@ -101,13 +102,13 @@ void SetUp()
 	lvUltraschallsensor1->init(pin->get_lvUltraschallsensorTrigger1(), pin->get_lvUltraschallsensorEcho1(),1);
 	lvUltraschallsensor2->init(pin->get_lvUltraschallsensorTrigger2(), pin->get_lvUltraschallsensorEcho2(),1);
 	lvUltraschallsensor3->init(pin->get_lvUltraschallsensorTrigger3(), pin->get_lvUltraschallsensorEcho3(),1,45);
-
+	/*
 	rhUltraschallsensor1->init(pin->get_rhUltraschallsensorTrigger1(), pin->get_rhUltraschallsensorEcho1(),1);
 	rhUltraschallsensor2->init(pin->get_rhUltraschallsensorTrigger2(), pin->get_rhUltraschallsensorEcho2(),1);
 	rhUltraschallsensor3->init(pin->get_rhUltraschallsensorTrigger3(), pin->get_rhUltraschallsensorEcho3(),1,45);
 	lhUltraschallsensor1->init(pin->get_lhUltraschallsensorTrigger1(), pin->get_lhUltraschallsensorEcho1(),1);
 	lhUltraschallsensor2->init(pin->get_lhUltraschallsensorTrigger2(), pin->get_lhUltraschallsensorEcho2(),1);
-	lhUltraschallsensor3->init(pin->get_lhUltraschallsensorTrigger3(), pin->get_lhUltraschallsensorEcho3(),1,45);
+	lhUltraschallsensor3->init(pin->get_lhUltraschallsensorTrigger3(), pin->get_lhUltraschallsensorEcho3(),1,45);*/
 
 	//Motoren
 	MotorA->initialisEngine(pin->get_RadAf(), pin->get_RadAb());
@@ -132,7 +133,8 @@ void SetUp()
 
 void JoystickWerte()
 {
-	if (joystick.sample(&Event)){
+	if (joystick.sample(&Event)
+	{
 		if(Event.isAxis())//Auslesen des Joysticks fürs normale Fahren,Driften und Drehen
 		{
 			switch (Event.number)
@@ -165,28 +167,75 @@ void JoystickWerte()
 			{
 				cModule = true;
 			}
-		}
-		else
-		{
-			cModule = false;
-		}
-		if(Event.number == 0){
-			Cs->set_end();
-		}
-		if(Event.number == 1){
-			Cs->set_pause();
+			else
+			{
+				cModule = false;
+			}
+		
+			if(Event.number == 0)
+			{
+				Cs->set_end();
+			}
+		
+			if(Event.number == 1)
+			{
+				Cs->set_pause();
+			}
 		}
 	}
 }
 
+int KontrolleEingabe() //soll unlogische Eingaben verhindern; viele Probleme werden durch die fall zuweisung verhindert/Aufbau der Schalter
+{
+	if (pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)//Nicht parken + manuelle Steuerung an
+	{
+		return 1;
+	}
+
+	if (pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_anAus()) == 0)//Ausschalten ohne das man voher parkt
+	{
+		return 1;
+	}
+
+	if (pin->WerteLesen(pin->get_Parken()) == 1 && cModule == true)//Parken und Hochfahren wollen
+	{
+		return 1;
+	}
+
+	if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1 && cModule == true)//manuelle Steuerung + Hochfahren wollen
+	{
+		return 1;
+	}
+
+	return 0;
+}
 
 int fall()
 {
-	if (Cs->getOnlineStat()){
+	if (pin->WerteLesen(pin->get_pinNotaus()) == 0)
+	{
+		NOTAUS = true;
+		return 6;
+	}
+
+	if ((cModule == true && pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 0) || Cs->getOnlineStat())
+	{
 		return 4;
 	}
+
+	if (KontrolleEingabe() == 1)
+	{
+		return 7;
+	}
+
 	if (pin->WerteLesen(pin->get_Parken()) == 1)
 	{
+
+		if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
+		{
+			return 5;
+		}
+
 		return 0;
 	}
 	else
@@ -199,16 +248,6 @@ int fall()
 		if (pin->WerteLesen(pin->get_fahrtModiDrehen()) == 1) 
 		{
 			return 3;
-		}
-		
-		if (cModule == true) 
-		{
-			return 4;
-		}
-
-		if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
-		{
-			return 5;
 		}
 
 		return 2;
@@ -281,14 +320,12 @@ int main()
 				break;
 			
 			case 4:
-				//C-Klasse aufrufe
+				Cs->UP();
 
 				lcm->clear();
 
 				lcm->write(0, 0, "Fahrtmodus:");
 				lcm->write(3, 1, "Hochfahren");
-
-				Cs->UP();
 
 				break;
 			
@@ -299,36 +336,78 @@ int main()
 
 				lcm->clear();
 
-				//lcm.write(0, 0, mSterueung.Was auch immer hier Stehen soll);
-				//lcm.write(0, 1, );
+				break;
 
+			case 7:
+				LenkungCDrive.parken();
+
+				lcm->clear();
+
+				lcm->write(0, 0, "Auswahl");
+				lcm->write(1, 1, "kontrollieren");
+
+				break;
+
+			default:
 				break;
 		}
 
 		//Zuweisung der Leistungen den Motoren
 		switch (fall())
 		{
-			case 4:
-				//c-klasse motoren zuweisung
-				break;
-
-			case 5:
-				//manualControl zuweisung
-				break;
-
-			default:
+			case 0:
+			case 1:
+			case 2:
+			case 3:
 				MotorA->set_power(LenkungCDrive.get_leistungRadA());
 				MotorB->set_power(LenkungCDrive.get_leistungRadB());
 				MotorC->set_power(LenkungCDrive.get_leistungRadC());
 				MotorD->set_power(LenkungCDrive.get_leistungRadD());
+				
+				break;
+
+			case 6:
+				MotorA->set_power(0);
+				MotorB->set_power(0);
+				MotorC->set_power(0);
+				MotorD->set_power(0);
+
+				MotorCA->set_power(0);
+				MotorCB->set_power(0);
+				MotorCC->set_power(0);
+				MotorCD->set_power(0);
+
+			default:
 				break;
 		}
 
 		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
 		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
 
+		//Abbruchfunktion
+		if (NOTAUS == true || pin->WerteLesen(pin->get_anAus()) == 1)
+		{
+			break;
+		}
+
 		//delay(75);
 	}
+
+	if (pin->WerteLesen(pin->get_anAus()) == 1)//Endkommentar
+	{
+		lcm->clear();
+		lcm->write(0, 0, "Auf Wiedersehen");
+
+		delay(1000);
+
+		lcm->write(1, 1, "Herunterfahren");
+
+		delay(3000);
+
+		lcm->clear();
+	}
+
+	system("sudo shutdown -h now"); //zum heruterfahren des Pis
 
 	return 0;
 }

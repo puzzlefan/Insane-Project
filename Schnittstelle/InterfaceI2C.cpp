@@ -20,10 +20,12 @@ void Schnittstelle::InterfaceSetUp()
 	pinMode(fahrtModiNormalesFahren, INPUT);
 	pinMode(fahrtModiDrehen, INPUT);
 	pinMode(manuelleSteuerung, INPUT);
-	//
-	//NEU
-	//
-	if ((ConnectionToken = wiringPiI2CSetup(AdresseRotationsArduino))<0) {//Seems to open the needet i2c Channel for wiring pi
+	pinMode(anAus, INPUT);
+
+	pinMode(pinNotaus, INPUT);
+
+	if ((ConnectionToken = wiringPiI2CSetup(AdresseRotationsArduino))<0) //Seems to open the needet i2c Channel for wiring pi
+	{
 		printf("error opening i2c channel\n\r");
 	}
 }
