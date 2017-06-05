@@ -14,7 +14,7 @@
 
 using namespace std;
 //constructor
-manualOverwrite::manualOverwrite(LCM ** lcm,Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt, Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt, engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr, engine ** cvl, engine ** cvr, engine ** cbl, engine ** cbr,Rotationssensor ** rotLV, Rotationssensor ** rotRV, Rotationssensor ** rotLH, Rotationssensor ** rotRH)
+manualOverwrite::manualOverwrite(LCM ** lcm,Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt,/* Ultraschall hinten Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt,*/ engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr, engine ** cvl, engine ** cvr, engine ** cbl, engine ** cbr,Rotationssensor ** rotLV, Rotationssensor ** rotRV, Rotationssensor ** rotLH, Rotationssensor ** rotRH)
 {
 	this->lcm=*lcm;
 	//brings the left ultra sonic sensors in position
@@ -26,13 +26,13 @@ manualOverwrite::manualOverwrite(LCM ** lcm,Sonar ** flb, Sonar ** flm, Sonar **
 	fUS[1][1] = *frm;
 	fUS[1][2] = *frt;
 	//brings the left ultra sonic back sensors in position
-	bUS[0][0] = *blb;
-	bUS[0][1] = *blm;
-	bUS[0][2] = *blt;
+//	bUS[0][0] = *blb;
+//	bUS[0][1] = *blm;
+//	bUS[0][2] = *blt;
 	//brings the rigth ultra sonic back sensors in position
-	bUS[1][0] = *brb;
-	bUS[1][1] = *brm;
-	bUS[1][2] = *brt;
+//	bUS[1][0] = *brb;
+//	bUS[1][1] = *brm;
+//	bUS[1][2] = *brt;
 	//brings the engines in position
 	engines[0] = *rvl;
 	engines[1] = *rvr;
@@ -49,13 +49,23 @@ manualOverwrite::manualOverwrite(LCM ** lcm,Sonar ** flb, Sonar ** flm, Sonar **
 	Roti[2] = *rotLH;
 	Roti[3] = *rotRH;
 }
+
 //private Functions
 void manualOverwrite::print(std::string toPrint, std::string toPrintTwo) {
+	//If it should print by itself
+	/*
 	lcm->clear();
 	lcm->write(0,0,toPrint);
 	lcm->write(0,1,toPrintTwo);
-//	std::cout<<toPrint<<" Zeile 2: "<<toPrintTwo<<std::endl;Debug output
+	//	std::cout<<toPrint<<" Zeile 2: "<<toPrintTwo<<std::endl;Debug output
+	*/
+	//Debug output to the commandline
+	std::cout<<toPrint<<std::endl;
+	std::cout<<toPrintTwo<<std::endl;
+	output[0] = toPrint;
+	output[1] = toPrintTwo;
 }
+
 int manualOverwrite::evenLine() {
 	int reture = 0;
 	if (depth == minDepth) { reture = 0; }
@@ -74,6 +84,7 @@ int manualOverwrite::evenLine() {
 	}
 	return reture;
 }
+
 int manualOverwrite::odLine() {
 	int reture = 0;
 	if (depth == minDepth) { reture = pos; }
@@ -99,12 +110,14 @@ int manualOverwrite::odLine() {
 	}
 	return reture;
 }
+
 //public functions
-void manualOverwrite::renewNavVar(int DLR, int DTB, int XAc) {
+void manualOverwrite::renewNavVar(int DLR, int DTB, int YAc) {
 	this->DLR = DLR;
 	this->DTB = DTB;
-	this->XAc = XAc;
+	this->YAc = YAc;
 }
+
 void manualOverwrite::navigate(){
 	if (lastPosNavi[0] != DLR) {
 		if (DLR < 0)
@@ -144,13 +157,14 @@ void manualOverwrite::navigate(){
 		}
 		else
 		{
-			if (lastPosNavi[2] != XAc&&depth == maxDepth)
+			if (lastPosNavi[2] != YAc&&depth == maxDepth)
 			{
-				lastPosNavi[2] = XAc;
+				lastPosNavi[2] = YAc;
 			}
 		}
 	}
 }
+
 void manualOverwrite::express() {
 		int od = odLine();
 		int var = 0;//holds the outpuvalue if needed
@@ -158,137 +172,167 @@ void manualOverwrite::express() {
 			switch (od)
 			{
 			case 0:
-				//engines front to XAc
-				engines[0]->set_power(XAc);
-				engines[1]->set_power(XAc);
-				var = XAc;
+				//engines front to YAc
+				engines[0]->set_power(YAc);
+				engines[1]->set_power(YAc);
+//				var = YAc;
 				break;
+
 			case 1:
-				//engines back to XAc
-				engines[2]->set_power(XAc);
-				engines[3]->set_power(XAc);
-				var = XAc;
+				//engines back to YAc
+				engines[2]->set_power(YAc);
+				engines[3]->set_power(YAc);
+//				var = YAc;
 				break;
+
 			case 2:
-				//engine front left to XAc
-				engines[0]->set_power(XAc);
-				var = XAc;
+				//engine front left to YAc
+				engines[0]->set_power(YAc);
+//				var = YAc;
 				break;
+
 			case 3:
-				//engine front rigth to XAc
-				engines[1]->set_power(XAc);
-				var = XAc;
+				//engine front rigth to YAc
+				engines[1]->set_power(YAc);
+//				var = YAc;
 				break;
+
 			case 4:
-				//engine back left to XAc
-				engines[2]->set_power(XAc);
-				var = XAc;
+				//engine back left to YAc
+				engines[2]->set_power(YAc);
+//				var = YAc;
 				break;
+
 			case 5:
-				//engine back rigth to XAc
-				engines[3]->set_power(XAc);
-				var = XAc;
+				//engine back rigth to YAc
+				engines[3]->set_power(YAc);
+//				var = YAc;
 				break;
+
 			case 6:
-				//C engine front left to XAc
-                                Cengines[0]->set_power(XAc);
-                                var = XAc;
+				//C engine front left to YAc
+		                Cengines[0]->set_power(YAc);
+//                		var = YAc;
 				break;
+
 			case 7:
-				//C engine front rigth to XAc
-                                Cengines[1]->set_power(XAc);
-                                var = XAc;
+				//C engine front rigth to YAc
+		                Cengines[1]->set_power(YAc);
+//		                var = YAc;
 				break;
+
 			case 8:
-				//C engine back left to XAc
-				Cengines[2]->set_power(XAc);
-                                var = XAc;
+				//C engine back left to YAc
+				Cengines[2]->set_power(YAc);
+//                		var = YAc;
 				break;
+
 			case 9:
-				//C engine back rigth to XAc
-				Cengines[3]->set_power(XAc);
-                                var = XAc;
+				//C engine back rigth to YAc
+				Cengines[3]->set_power(YAc);
+//                var = YAc;
 				break;
+
 			case 10:
 				//var= Ultra vlu
-				var = fUS[0][0]->distance(timeout);
+//				var = fUS[0][0]->distance(timeout);
 				break;
+
 			case 11:
 				//var= Ultra vlm
-				var = fUS[0][1]->distance(timeout);
+//				var = fUS[0][1]->distance(timeout);
 				break;
+
 			case 12:
 				//var= Ultra vlo
-				var = fUS[0][2]->distance(timeout);
+//				var = fUS[0][2]->distance(timeout);
 				break;
+
 			case 13:
 				//var= Ultra vru
-				var = fUS[1][0]->distance(timeout);
+//				var = fUS[1][0]->distance(timeout);
 				break;
+
 			case 14:
 				//var= Ultra vrm
-				var = fUS[1][1]->distance(timeout);
+//				var = fUS[1][1]->distance(timeout);
 				break;
+
 			case 15:
 				//var= Ultra vro
-				var = fUS[1][2]->distance(timeout);
+//				var = fUS[1][2]->distance(timeout);
 				break;
+
 			case 16:
 				//var= Ultra hlu
-				var = bUS[0][0]->distance(timeout);
+//				var = bUS[0][0]->distance(timeout);
 				break;
+
 			case 17:
 				//var= Ultra hlm
-				var = bUS[0][1]->distance(timeout);
+//				var = bUS[0][1]->distance(timeout);
 				break;
+
 			case 18:
 				//var= Ultra hlo
-				var = bUS[0][2]->distance(timeout);
+//				var = bUS[0][2]->distance(timeout);
 				break;
+
 			case 19:
 				//var= Ultra hru
-				var = bUS[1][0]->distance(timeout);
+//				var = bUS[1][0]->distance(timeout);
 				break;
+
 			case 20:
 				//var= Ultra hrm
-				var = bUS[1][1]->distance(timeout);
+//				var = bUS[1][1]->distance(timeout);
 				break;
+
 			case 21:
 				//var= Ultra hro
-				var = bUS[1][2]->distance(timeout);
+//				var = bUS[1][2]->distance(timeout);
 				break;
+
 			case 22:
-				//var= C vl°
+				//var= C vlï¿½
 				var=0;
 				break;
+
 			case 23:
-				//var= C vr°
-                                var=0;
+				//var= C vrï¿½
+		                var=0;
 				break;
+
 			case 24:
-				//var= C hl°
-                                var=0;
+				//var= C hlï¿½
+		                var=0;
 				break;
+
 			case 25:
-				//var= C hr°
-                                var=0;
+				//var= C hrï¿½
+//                		var=0;
 				break;
+
 			case 26:
-				//var= RAD vl°
-				var = Roti[0]->get_RSteps();
+				//var= RAD vlï¿½
+//				var = Roti[0]->get_RSteps();
 				break;
+
 			case 27:
-				//var= Rad vr°
-				var = Roti[1]->get_RSteps();
+				//var= Rad vrï¿½
+//				var = Roti[1]->get_RSteps();
 				break;
+
 			case 28:
-				//var= Rad hl°
-				var = Roti[2]->get_RSteps();
+				//var= Rad hlï¿½
+//				var = Roti[2]->get_RSteps();
 				break;
+
 			case 29:
-				//var= Rad hr°
-				var = Roti[3]->get_RSteps();
+				//var= Rad hrï¿½
+//				var = Roti[3]->get_RSteps();
 				break;
+
 			default:
 				break;
 			}
@@ -299,12 +343,9 @@ void manualOverwrite::express() {
 				engines[i]->set_power(0);
 			}
 		}
-		if (lastDepth != depth || lastPos != pos)//Only prints when values have changed
-		{
-			print(Texte[depth * 2][evenLine()],Texte[1 + depth * 2][od]+": "+std::to_string(var));
-			lastDepth = depth;
-			lastPos = pos;
-		}
+		print(Texte[depth * 2][evenLine()],Texte[1 + depth * 2][od]+": "+std::to_string(var));
+		lastDepth = depth;
+		lastPos = pos;
 }
 /* damit mit main zusammen kompeliert wird habe ich es auskommentiert LG Beke
 int main()
@@ -312,7 +353,7 @@ int main()
 	manualOverwrite test(0);
 	int DLR = 0;
 	int DTB = 0;
-	int XAc = 0;
+	int YAc = 0;
 	Joystick joystick("/dev/input/js0");
 	JoystickEvent events;
 	if (!joystick.isFound())
@@ -337,11 +378,10 @@ int main()
 				}
 			}
 		}
-		test.renewNavVar(DLR, DTB, XAc);
+		test.renewNavVar(DLR, DTB, YAc);
 		test.navigate();
 		test.express();
 	}
 	cin.get();
 	return 0;
 }*/
-
