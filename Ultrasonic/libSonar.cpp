@@ -14,6 +14,12 @@ void Sonar::init(int trigger, int echo)
 	digitalWrite(trigger, LOW);
 	delay(500);
 }
+
+void Sonar::init(int trigger, int echo, int height){
+	init(trigger,echo);
+	this->height = height;
+}
+
 void Sonar::init(int trigger, int echo, int height, int angle) {
 	this->trigger = trigger;
 	this->echo = echo;

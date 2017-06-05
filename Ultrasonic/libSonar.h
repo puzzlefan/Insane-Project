@@ -2,12 +2,12 @@
 #define DEF_SONAR
 #define _USE_MATH_DEFINES
 #include "math.h"
-//distances in Meter
 class Sonar
 {
 public:
 	Sonar();//Constructr does nothing
-	void init(int trigger, int echo);//init for straigth forward Sensors
+	void init(int trigger, int echo);//init for simple Sensors
+	void init(int trigger, int echo, int height);//init for simple straigth Ultrasonic sensors
 	void init(int trigger, int echo, int height, int angle);//init for angledS Sensors
 	double distance(int timeout);// mesurment function
 	double calcDistance(int timeout);//calculated distance for angled sensors 
