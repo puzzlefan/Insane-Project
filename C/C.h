@@ -2,7 +2,7 @@
 #include "math.h"
 #include "../Ultrasonic/libSonar.h"
 #include "../engine/engine.h"
-#include "../switchig/switching.h"
+#include "../switching/switching.h"
 #include "../rotaryencoder/RotationssensorArduino.h"
 
 class C
@@ -13,7 +13,7 @@ private:
 	//
 	//Array of Sonar Sensors  0 = bottom -> 2 = top
 	Sonar * fUS[2][3];//0= Left, 1=Rigth ;0=bottom 2=top
-	Sonar * bUS[2][3];//"
+//	Sonar * bUS[2][3];//"		Ultraschallsensoren hinten
 	//Array of Rotationsensors at the wheels
 	Rotationssensor * Wheels[4]; //0= LV, 1 = RV, 2= HL ...
 	//Array of Switchers
@@ -58,7 +58,7 @@ private:
 	//caculatet consts
 	const double	lengthDifMidLow = sin((2 * M_PI) - (DegreeToRad * maxAngle)) * (heigthMiddel - heigthLowest);// distance difference that is needet to define something as a slope
 	double maxSchraegHoehe[2];
-	
+
 	//while avoidence
 	bool FirstRound = true;//indicates if this is the first roundtrip through the function
 	bool FirstPrimeRound = true; // indicates that this is the first run through the prime pos chapter
@@ -107,9 +107,9 @@ private:
 	void reset();//resets the class to initial position
 	bool upper(bool back);//switches and moves until one pair of wheels has changed it higth in a full circle
 public:
-	C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt, Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt, Rotationssensor ** wlf, Rotationssensor ** wrf, Rotationssensor ** wlb, Rotationssensor ** wrb, switching ** svl, switching ** svr, switching ** sbl, switching ** sbr, engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr);//gets the values needed to use the Claas, (Z.B. lenkung; Motoren, Switching, Ultrasch�lle, Rotatiosensoren...
+	C(Sonar ** flb, Sonar ** flm, Sonar ** flt, Sonar ** frb, Sonar ** frm, Sonar ** frt, /* Ultraschall hinten Sonar ** blb, Sonar ** blm, Sonar ** blt, Sonar ** brb, Sonar ** brm, Sonar ** brt,*/ Rotationssensor ** wlf, Rotationssensor ** wrf, Rotationssensor ** wlb, Rotationssensor ** wrb, switching ** svl, switching ** svr, switching ** sbl, switching ** sbr, engine ** rvl, engine ** rvr, engine ** rbl, engine ** rbr);//gets the values needed to use the Claas, (Z.B. lenkung; Motoren, Switching, Ultrasch�lle, Rotatiosensoren...
 	void UP();//starts the C up sequence
-	void DOWN();//starts the C don sequence
+	void DOWN();//starts the C down sequence
 
 	void set_pause() { timeoutPlease = true; }
 	void set_end() { cryer = true; }
