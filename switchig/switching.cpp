@@ -2,17 +2,23 @@
 //
 
 #include "switching.h"
-#include <unistd.h>
+//#include <unistd.h>
 #include <time.h>
 #include <wiringPi.h>
 #include "../engine/engine.h"
-
+#include <chrono>
 
 switching::switching(engine ** motor)
 {
 	//copys the local variables to their global counter part
 	modor = *motor;
 }
+
+void switching::SetUp(double UPTime, double DownTime){
+	this->UPTime=UPTime;
+	this->DownTime=DownTime;
+}
+
 bool switching::up() {
 	if (start) {
 		modor->set_power(100);
@@ -20,14 +26,13 @@ bool switching::up() {
 		waiting = true;
 	}
 	if(waiting){
-		if (-1 == clock_gettime(CLOCK_MONOTONIC,&Time)) {
-			//Error Handling here
-		}
 		if (waitingFirst) {
-			comparisonEvent = (unsigned double) Time.tv_nsec + ((unsigned double) Time.tv_sec) * 1000000000;
+			beginn = std::chrono::system_clock::now();
 			waitingFirst = false;
 		}
-		if (comparisonEvent + movingTime <= (unsigned double) Time.tv_nsec + ((unsigned double) Time.tv_sec) * 1000000000) {
+		end = std::chrono::system_clock::now();
+		std::chrono::duration<double> elapsed_time = end - beginn;
+		if (elapsed_time.count()>= UPTime) {
 			waiting = false;
 			ending = true;
 		}
@@ -52,14 +57,13 @@ bool switching::down() {
 		waiting = true;
 	}
 	if(waiting){
-		if (-1 == clock_gettime(CLOCK_MONOTONIC,&Time)) {
-			//Error Handling here
-		}
 		if (waitingFirst) {
-			comparisonEvent = (unsigned double) Time.tv_nsec + ((unsigned double) Time.tv_sec) * 1000000000;
+			beginn = std::chrono::system_clock::now();
 			waitingFirst = false;
 		}
-		if (comparisonEvent + movingTime <= (unsigned double) Time.tv_nsec + ((unsigned double) Time.tv_sec) * 1000000000) {
+		end = std::chrono::system_clock::now();
+		std::chrono::duration<double> elapsed_time = end - beginn;
+		if (elapsed_time.count()>= DownTime) {
 			waiting = false;
 			ending = true;
 		}
