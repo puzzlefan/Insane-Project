@@ -1,9 +1,10 @@
+/*
 #include<wiringPi.h>
 #include<iostream>
 #include "Rotationssensor.h"
 #include <pthread.h>
 
-void rotationssensor::rotationscount(int i){
+void Rotationssensor::rotationscount(int i){
 	EndMSec = millis();//stops time mesurment
 	passedTime = EndMSec - StartMSec;//calculates passed time
 	if(passedTime>=minT){//checks if the code is allowed to get exrcutet
@@ -49,3 +50,4 @@ void rotationssensor::rotationscount(int i){
 		}
 	}
 }
+*/

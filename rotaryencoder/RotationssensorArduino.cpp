@@ -98,6 +98,6 @@ double Rotationssensor::get_distanceFromThenToNow(int oldSteps, int oldRoation) 
 	return reture;
 }
 
-void Rotationssensor::resetSteps(int Reg) {
-	(*Interface)->I2C8Write((*Interface)->get_connectionToken(),Reg,pow(2,8));
+void Rotationssensor::resetSteps() {
+	(*Interface)->I2C8Write((*Interface)->get_connectionToken(),255,0);//trigers reset command
 }

@@ -33,7 +33,7 @@ public:
 	int get_oldSteps(int pos);
 	int get_oldRevs(int pos);
 
-	void resetSteps(int reg);
+	void resetSteps();
 };
 
 #endif
