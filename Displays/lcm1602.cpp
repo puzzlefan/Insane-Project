@@ -2,7 +2,7 @@
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <string.h>
-#include <lcm1602.h>
+#include "lcm1602.h"
 
 LCM::LCM()
 {
