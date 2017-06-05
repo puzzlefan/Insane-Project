@@ -1,7 +1,4 @@
-#include "..\Rotationssensor\InterfaceI2C.h"
-#include "..\Rotationssensor\InterfaceI2C.h"
-#include "..\Rotationssensor\InterfaceI2C.h"
-#include "..\Rotationssensor\InterfaceI2C.h"
+#include <iostream>
 #include <wiringPi.h>
 #include <mcp23017.h>
 #include "InterfaceI2C.h"
@@ -11,10 +8,8 @@
 void Schnittstelle::InterfaceSetUp()
 {
 	// Erstellen der verschiedenen Extentionboards
-	mcp23017Setup(100, 0x20);
+	mcp23017Setup(300, 0x20);
 	mcp23017Setup(200, 0x21);
-	mcp23017Setup(300, 0x22);
-	mcp23017Setup(400, 0x24);
 
 	pinMode(Parken, INPUT);
 	pinMode(fahrtModiNormalesFahren, INPUT);
@@ -26,7 +21,7 @@ void Schnittstelle::InterfaceSetUp()
 
 	if ((ConnectionToken = wiringPiI2CSetup(AdresseRotationsArduino))<0) //Seems to open the needet i2c Channel for wiring pi
 	{
-		printf("error opening i2c channel\n\r");
+		std::cout<<"error opening i2c channel\n\r"<<std::endl;
 	}
 }
 

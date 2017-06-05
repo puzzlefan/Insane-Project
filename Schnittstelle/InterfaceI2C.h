@@ -44,17 +44,17 @@ private:
 	int anAus = 200 + 12;
 
 	//Variablen für die Motoren; geben die PinNr. an
-	int RadAf = 7;
-	int RadAb = 0;
+	int RadAf = 0;
+	int RadAb = 29;
 
-	int RadBf = 2;
-	int RadBb = 3;
+	int RadBf = 3;
+	int RadBb = 2;
 
-	int RadCf = 23;
-	int RadCb = 24;
+	int RadCf = 21;
+	int RadCb = 22;
 
-	int RadDf = 21;
-	int RadDb = 22;
+	int RadDf = 24;
+	int RadDb = 23;
 
 	//Variablen für die Motoren am C-Modul; geben die PinNr.an
 	int cRadAf = 25;
@@ -70,7 +70,7 @@ private:
 	int cRadDb = 5;
 
 	//Notaus
-	int pinNotaus = 29;
+	int pinNotaus = 7;
 
 public:
 	void InterfaceSetUp();
