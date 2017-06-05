@@ -1,25 +1,37 @@
+/*
+	TODO
+	-
+	Anmerkungen
+	- Fall kurzgeschlossen
+	- NOTAUS wieder aktivieren
+	- Achse für manuel control gewechselt richtung vieleicht falsch
+	- Manul Control gibt jetzt string zurück und schreibt nicht selbst
+	Bugfixes
+	- String Initiallisierung aus Schaleife rausgenommen da sonst stetige Neudefinition
+*/
 #include <iostream>  //Grund-Funktionen
 #include <math.h>
+#include <string.h>
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <mcp23017.h>
 #include <softPwm.h>
-#include "rotaryencoder/RotationssensorArduino.h"
+#include <chrono>
+#include "rotaryencoder/RotationssensorArduino.h" 
 #include "Joystick/joystick.hh" //Klassen zur Verarbeitung von Sensordaten
 #include "Ultrasonic/libSonar.h"
 #include "Schnittstelle/InterfaceI2C.h" // Schnittstelle
 #include "Lenkung/Lenkung.h" //Generelle Steuerung
 #include "manualControl/manuelControl.h"
-#include "switchig/switching.h"//zum feststellen der C-Module
+#include "switching/switching.h"//zum feststellen der C-Module
+#include "C/C.h"//KLasse zur Verwendung der C-Module
 #include "engine/engine.h" // Klasse um Daten an Motoren weiter zu geben
 #include "Displays/lcm1602.h"//Klasse fuer Displays
-#include "C/C.h"
-
 
 // Erstellen einzelen Objekte aus den Klassen
-  
+
 //Schnittstellen
-Schnittstelle * pin = new Schnittstelle; 
+Schnittstelle * pin = new Schnittstelle;
 
 //Joystick
 Joystick joystick("/dev/input/js0");
@@ -71,12 +83,15 @@ Lenkung LenkungCDrive;
 LCM * lcm = new LCM;
 
 //manuelle Lenkung
-manualOverwrite mSteuerung(& lcm,& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& MotorA,& MotorB,& MotorC,& MotorD,& MotorCA,& MotorCB,& MotorCC,& MotorCD,& RotLV,& RotRV,& RotLH,& RotRH);
+manualOverwrite mSteuerung(& lcm,& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,/*Nicht existente Sensoren & lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,*/& MotorA,& MotorB,& MotorC,& MotorD,& MotorCA,& MotorCB,& MotorCC,& MotorCD,& RotLV,& RotRV,& RotLH,& RotRH);
 
 //Cs
-C * Cs = new C(& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,& lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,& RotLV,& RotRV,& RotLH,& RotRH, & CDriveA, & CDriveB,& CDriveC,& CDriveD,& MotorA,& MotorB, & MotorC, & MotorD);
+C * Cs = new C(& lvUltraschallsensor1,& lvUltraschallsensor2,& lvUltraschallsensor3,& rvUltraschallsensor1,& rvUltraschallsensor2,& rvUltraschallsensor3,/* Nicht Existente Ultraschallsensoren & lhUltraschallsensor1,& lhUltraschallsensor2,& lhUltraschallsensor3,& rhUltraschallsensor1,& rhUltraschallsensor2,& rhUltraschallsensor3,*/& RotLV,& RotRV,& RotLH,& RotRH, & CDriveA, & CDriveB,& CDriveC,& CDriveD,& MotorA,& MotorB, & MotorC, & MotorD);
+
+//Hey Beeks
 
 //Initiallisieren aller wichtigen Variablen
+double Zeiten[4][2] ={{1,1},{1,1},{1,1},{1,1}};
 int xAchse = 0;
 int yAchse = 0;
 int zAchse = 0;
@@ -84,7 +99,24 @@ int DLR = 0;
 int DTB = 0;
 bool cModule = false;
 bool NOTAUS = false;
+//Checkvalues
+bool NOT_AUS = false;
+bool POWERONOFF = false;
+bool PARKING = false;
+bool MANUAL = false;
+bool NORMAL = false;
+bool DREHEN = false;
+bool C_MODUL = false;
 
+//Roundtrip time mesurment variables
+
+std::chrono::time_point<std::chrono::system_clock> AnfangSchleife, EndeSchleife;
+unsigned int Roundtrips = 0;
+double lastRoundtripTime = 0;
+double averageLastRoundtripTime = 0;
+
+
+using namespace std;
 
 void SetUp()
 {
@@ -121,6 +153,12 @@ void SetUp()
 	MotorCC->initialisEngine(pin->get_cRadCf(), pin->get_cRadCb());
 	MotorCD->initialisEngine(pin->get_cRadDf(), pin->get_cRadDb());
 
+	//switching
+	CDriveA->SetUp(Zeiten[0][0],Zeiten[0][1]);
+	CDriveB->SetUp(Zeiten[1][0],Zeiten[1][1]);
+	CDriveD->SetUp(Zeiten[2][0],Zeiten[2][1]);
+	CDriveC->SetUp(Zeiten[3][0],Zeiten[3][1]);
+
 	//"Output" auf Display
 	lcm->clear();
 
@@ -128,23 +166,23 @@ void SetUp()
 	lcm->write(2, 1, "Gute Fahrt!");
 
 	delay(3000);
-	
+
 	lcm->clear();
 }
 
 
 void JoystickWerte()
 {
-	if (joystick.sample(&Event)
+	if (joystick.sample(&Event))
 	{
-		if(Event.isAxis())//Auslesen des Joysticks f�rs normale Fahren,Driften und Drehen
+		if(Event.isAxis())//Auslesen des Joysticks f�rs normale Fahren,Driften und Drehen
 		{
 			switch (Event.number)
 			{
 				case 0:
 					xAchse = Event.value / 327;
 					break;
-			
+
 				case 1:
 					yAchse = Event.value / 327;
 					break;
@@ -163,7 +201,7 @@ void JoystickWerte()
 			}
 		}
 
-		if(Event.isButton())//Warten auf das Signal zu hochfahren �ber die C-Module
+		if(Event.isButton())//Warten auf das Signal zu hochfahren �ber die C-Module
 		{
 			if(Event.number == 3 && Event.value == 1)
 			{
@@ -173,12 +211,12 @@ void JoystickWerte()
 			{
 				cModule = false;
 			}
-		
+
 			if(Event.number == 0)
 			{
 				Cs->set_end();
 			}
-		
+
 			if(Event.number == 1)
 			{
 				Cs->set_pause();
@@ -187,24 +225,35 @@ void JoystickWerte()
 	}
 }
 
+void ReadPins()
+{// Wenn etwas aktiev seien soll ist der status der bool true
+	NOT_AUS			= !pin->WerteLesen(pin->get_pinNotaus());//Bei Null alles aus
+	POWERONOFF 		= pin->WerteLesen(pin->get_anAus());//wenn eins dann laufen 0 => aus
+	PARKING			= pin->WerteLesen(pin->get_Parken());//wenn eins dann parken
+	MANUAL			= pin->WerteLesen(pin->get_manuelleSteuerung());//Wenn 1 dann manuelle Steuerung
+	NORMAL			= pin->WerteLesen(pin->get_fahrtModiNormalesFahren());//Wenn 1 dann normales fahren
+	DREHEN			= pin->WerteLesen(pin->get_fahrtModiDrehen());//wenn 1 dann drehen
+	C_MODUL			= cModule;
+}
+
 int KontrolleEingabe() //soll unlogische Eingaben verhindern; viele Probleme werden durch die fall zuweisung verhindert/Aufbau der Schalter
 {
-	if (pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)//Nicht parken + manuelle Steuerung an
+	if (!PARKING && MANUAL)//Nicht parken + manuelle Steuerung an
 	{
 		return 1;
 	}
 
-	if (pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_anAus()) == 0)//Ausschalten ohne das man voher parkt
+	if (!PARKING && !POWERONOFF)//Ausschalten ohne das man voher parkt
 	{
 		return 1;
 	}
 
-	if (pin->WerteLesen(pin->get_Parken()) == 1 && cModule == true)//Parken und Hochfahren wollen
+	if (PARKING && cModule == true)//Parken und Hochfahren wollen
 	{
 		return 1;
 	}
 
-	if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1 && cModule == true)//manuelle Steuerung + Hochfahren wollen
+	if (MANUAL && cModule == true)//manuelle Steuerung + Hochfahren wollen
 	{
 		return 1;
 	}
@@ -214,26 +263,27 @@ int KontrolleEingabe() //soll unlogische Eingaben verhindern; viele Probleme wer
 
 int fall()
 {
-	if (pin->WerteLesen(pin->get_pinNotaus()) == 0)
+	
+	if (NOT_AUS)//Bei NOTAUS Abbruch
 	{
 		NOTAUS = true;
 		return 6;
 	}
 
-	if ((cModule == true && pin->WerteLesen(pin->get_Parken()) == 0 && pin->WerteLesen(pin->get_manuelleSteuerung()) == 0) || Cs->getOnlineStat())
+	if ((cModule == true && !PARKING && !MANUAL) || Cs->getOnlineStat())//fährt hoch, startet nut wenn weidersprüchliche Bedingungen nicht vorliegen
 	{
 		return 4;
 	}
 
-	if (KontrolleEingabe() == 1)
+	if (KontrolleEingabe() == 1)//sucht wiedersprüche
 	{
 		return 7;
 	}
 
-	if (pin->WerteLesen(pin->get_Parken()) == 1)
+	if (PARKING)//wenn Parken dann
 	{
 
-		if (pin->WerteLesen(pin->get_manuelleSteuerung()) == 1)
+		if (MANUAL)
 		{
 			return 5;
 		}
@@ -242,12 +292,12 @@ int fall()
 	}
 	else
 	{
-		if (pin->WerteLesen(pin->get_fahrtModiNormalesFahren()) == 1) 
+		if (NORMAL)
 		{
 			return 1;
 		}
 
-		if (pin->WerteLesen(pin->get_fahrtModiDrehen()) == 1) 
+		if (DREHEN)
 		{
 			return 3;
 		}
@@ -265,88 +315,84 @@ int main()
 	{
 		lcm->write(1, 0, "Kein Joystick!");
 		lcm->write(2, 1, "Keine Fahrt");
-		
+
 		delay(5000);
-		
+
 		lcm->clear();
-		
+
 		return 0;
 	}
 
+	//Variablen fuer Ausgabe auf Display
+	string out1;
+	string out2;
+	string out1Alt;
+	string out2Alt;
+
 	while(true)
 	{
+		//Roundtrip Zeiten Messen// An Teil am Ende der Schleife denken
+		AnfangSchleife = std::chrono::system_clock::now();
 		// Aktualisierung der Joystick Daten
 		JoystickWerte();
-
-		//Zuweisung welcher Typ von Fortbewegung gerade "zust�ndig" ist
+		ReadPins();
+		//Zuweisung welcher Typ von Fortbewegung gerade "zust�ndig" ist
 		switch(fall())
 		{
 			case 0:
 				LenkungCDrive.parken();
-				
-				lcm->clear();
 
-				lcm->write(0, 0, "Fahrtmodus:");
-				lcm->write(5, 1, "Parken");
-				
+				out1 = "Fahrtmodus:";
+				out2 = "Parken";
+
 				break;
-		
+
 			case 1:
 				LenkungCDrive.normaleLenkung(xAchse, yAchse);
-				
-				lcm->clear();
 
-				lcm->write(0, 0, "Fahrtmodus:");
-				lcm->write(4, 1, "normales Fahren");
-				
+				out1 = "Fahrtmodus:";
+				out2 = "normales Fahren";
+
 				break;
 
 			case 2:
 				LenkungCDrive.driften(xAchse, yAchse);
-				
-				lcm->clear();
-				
-				lcm->write(0, 0, "Fahrtmodus:");
-				lcm->write(4, 1, "Driften");
-				
+
+				out1 = "Fahrtmodus:";
+				out2 = "Driften";
+
 				break;
 
 			case 3:
-				LenkungCDrive.drehen(zAchse);
-				
-				lcm->clear();
+				LenkungCDrive.drehen(xAchse);
 
-				lcm->write(0, 0, "Fahrtmodus:");
-				lcm->write(5, 1, "Drehen");
-				
+				out1 = "Fahrtmodus:";
+				out2 = "Drehen";
+
 				break;
-			
+
 			case 4:
 				Cs->UP();
 
-				lcm->clear();
-
-				lcm->write(0, 0, "Fahrtmodus:");
-				lcm->write(3, 1, "Hochfahren");
-
-				break;
-			
-			case 5:
-				mSteuerung.renewNavVar(DLR, DTB, xAchse);
-				mSteuerung.navigate();
-				mSteuerung.express();
-
-				lcm->clear();
+				out1 = "Fahrtmodus:";
+				out2 = "Hochfahren";
 
 				break;
 
+			case 5://Muss string zurückgeben anstatt direkt zu schreiben
+				mSteuerung.renewNavVar(DLR, DTB, yAchse);//gives the controlvalues to the class
+				mSteuerung.navigate();//takes care that your navigation is leagel
+				mSteuerung.express();//matches the matching string to the navigation
+
+				out1 = mSteuerung.LineOne();//outputs the String to the main interface for the Display
+				out2 = mSteuerung.LineTwo();
+
+				break;
 			case 7:
 				LenkungCDrive.parken();
 
-				lcm->clear();
-
-				lcm->write(0, 0, "Auswahl");
-				lcm->write(1, 1, "kontrollieren");
+				out1 = "Auswahl";
+				out2 = "kontrollieren";
 
 				break;
 
@@ -354,18 +400,77 @@ int main()
 				break;
 		}
 
+		//Ausgabe auf Display
+		if (out1.compare(out1Alt))
+		{
+			lcm->clear();
+
+			lcm->write(0, 0, out1);
+			lcm->write(0, 1, out2);
+
+			out1Alt = out1;
+		}
+
+		if (out2.compare(out2Alt))
+		{
+			lcm->clear();
+
+			lcm->write(0, 0, out1);
+			lcm->write(0, 1, out2);
+
+			out2Alt = out2;
+		}
+
+		//Variable Abbruvh Leistung
+		double Abbruch = 3;
+
 		//Zuweisung der Leistungen den Motoren
 		switch (fall())
 		{
-			case 0:
+			case 0: //fallen alle auf case 3 da die Leistungen durch die Lenkung bestimmt werden um auch langsam zu bremsen ...
 			case 1:
 			case 2:
 			case 3:
-				MotorA->set_power(LenkungCDrive.get_leistungRadA());
-				MotorB->set_power(LenkungCDrive.get_leistungRadB());
-				MotorC->set_power(LenkungCDrive.get_leistungRadC());
-				MotorD->set_power(LenkungCDrive.get_leistungRadD());
-				
+				//Leistung auf Motor A
+				if (LenkungCDrive.get_leistungRadA()>Abbruch||LenkungCDrive.get_leistungRadA()<-Abbruch)
+				{
+					MotorA->set_power(LenkungCDrive.get_leistungRadA());
+				}
+				else
+				{
+					MotorA->set_power(0);
+				}
+
+				//Leistung auf Motor B
+				if (LenkungCDrive.get_leistungRadB()>Abbruch||LenkungCDrive.get_leistungRadB()<-Abbruch)
+				{
+					MotorB->set_power(LenkungCDrive.get_leistungRadB());
+				}
+				else
+				{
+					MotorB->set_power(0);
+				}
+
+				//Leistung auf Motor C
+				if (LenkungCDrive.get_leistungRadC()>Abbruch||LenkungCDrive.get_leistungRadC()<-Abbruch)
+				{
+					MotorC->set_power(LenkungCDrive.get_leistungRadC());
+				}
+				else
+				{
+					MotorC->set_power(0);
+				}
+
+				//Leistung auf Motor D
+				if (LenkungCDrive.get_leistungRadD()> Abbruch||LenkungCDrive.get_leistungRadD()< -Abbruch)
+				{
+					MotorD->set_power(LenkungCDrive.get_leistungRadD());
+				}
+				else
+				{
+					MotorD->set_power(0);
+				}
+
 				break;
 
 			case 6:
@@ -384,19 +489,28 @@ int main()
 		}
 
 		//Ausgabe auf Bildschirm
-		std::cout << xAchse << "  ,  " << -yAchse << std::endl;
-		std::cout << LenkungCDrive.get_vektor1() << "   ,   " << LenkungCDrive.get_vektor2() << std::endl;
+		std::cout << "Joystick X: " << xAchse << "  , Y:  " << -yAchse << std::endl;
+		//std::cout << "Lenkungsvektor 1: " <<LenkungCDrive.get_vektor1() << "   , 2:  " << LenkungCDrive.get_vektor2() << std::endl;
+		std::cout << "Motor A: " << MotorA->get_power() << "Motor B : " << MotorA->get_power() << "Motor C : " << MotorC->get_power() << " Motor D : " << MotorD->get_power() << std::endl;
+		std::cout << "Modi: " << fall() <<"  "<< out2 << std::endl;
 
 		//Abbruchfunktion
-		if (NOTAUS == true || pin->WerteLesen(pin->get_anAus()) == 1)
-		{
-			break;
-		}
-
-		//delay(75);
+//		if (NOTAUS == true || !stat[POWERONOFF] && KontrolleEingabe() == 0)
+//		{
+//			break;
+//		}
+		//Roundtrip ende
+		
+		EndeSchleife = std::chrono::system_clock::now();
+		std::chrono::duration<double> elapsed_time = EndeSchleife - AnfangSchleife;
+		lastRoundtripTime = elapsed_time.count();
+		Roundtrips++;
+		averageLastRoundtripTime = (averageLastRoundtripTime * (Roundtrips-1) + lastRoundtripTime)/Roundtrips;
+		std::cout << "Average roundtrip: "<< averageLastRoundtripTime<< " s" << endl;
+		
 	}
 
-	if (pin->WerteLesen(pin->get_anAus()) == 1)//Endkommentar
+	if (!POWERONOFF)//Endkommentar //Wenn durch Aus aus Nachricht anzeigen
 	{
 		lcm->clear();
 		lcm->write(0, 0, "Auf Wiedersehen");
@@ -410,7 +524,7 @@ int main()
 		lcm->clear();
 	}
 
-	system("sudo shutdown -h now"); //zum heruterfahren des Pis
+	//system("sudo shutdown -h now"); //zum heruterfahren des Pis
 
 	return 0;
 }
