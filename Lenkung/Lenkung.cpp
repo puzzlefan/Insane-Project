@@ -1,11 +1,11 @@
 #include <iostream>
-#include <InterfaceI2C.h>
-#include <Lenkung.h>
+#include "../Schnittstelle/InterfaceI2C.h"
+#include "Lenkung.h"
 #include <math.h>
-
+#include <cmath>
 
 void Lenkung::berechnungLange(int xAchse, int yAchse)
-{	
+{
 	double dxAchse = (double)xAchse;//wandelt Integerwerte in Double um, damit bei der Rechnung unterschiedliche Werte raus kommen
 	double dyAchse = (double)yAchse;
 	dyAchse *= -1;//um Koordinatensystem des Joysticks auszugleichen
@@ -13,10 +13,10 @@ void Lenkung::berechnungLange(int xAchse, int yAchse)
 	Vektor1 = 1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
 	Vektor2 = -1 / sqrt(2)*dxAchse + 1 / sqrt(2)*dyAchse;
 
-	if (Vektor1 > 70) { Vektor1 = 70; }
-	if (Vektor2 > 70) { Vektor2 = 70; }
-	if (Vektor1 < -70) { Vektor1 = -70; }
-	if (Vektor2 < -70) { Vektor2 = -70; }
+	if (Vektor1 > 100) { Vektor1 = 100; }
+	if (Vektor2 > 100) { Vektor2 = 100; }
+	if (Vektor1 < -100) { Vektor1 = -100; }
+	if (Vektor2 < -100) { Vektor2 = -100; }
 }
 
 void Lenkung::normaleLenkung(int xAchse, int yAchse)
@@ -32,17 +32,18 @@ void Lenkung::normaleLenkung(int xAchse, int yAchse)
 
 void Lenkung::driften(int xAchse, int yAchse)
 {
-	if (yAchse == 0) //seitwärts fahren; ansonsten keine Werte da yAchse = 0
+	if (yAchse == 0) //seitwrts fahren; ansonsten keine Werte da yAchse = 0
 	{
 		leistungRadA += lamda*(xAchse-leistungRadA);
 		leistungRadC += lamda*(xAchse-leistungRadC);
 
-		leistungRadB += -1*lamda*(xAchse-leistungRadB);
-		leistungRadD += -1*lamda*(xAchse-leistungRadD);
+		leistungRadB += lamda*(-xAchse-leistungRadB);//Geht nicht auf weil wenn x positiv  leistung negativ => -- wird immer schneller größer
+		leistungRadD += lamda*(-xAchse-leistungRadD);
+		
 	}
 
 	else //"normales" driften
-	{	
+	{
 		berechnungLange(xAchse, yAchse);
 
 		leistungRadA += lamda*(Vektor1-leistungRadA);
@@ -53,13 +54,13 @@ void Lenkung::driften(int xAchse, int yAchse)
 	}
 }
 
-void Lenkung::drehen(int zAchse)
+void Lenkung::drehen(int xAchse)//drehen jetzt mit X-Achse
 {
-	leistungRadB += lamda*(dampfung*zAchse-leistungRadB);
-	leistungRadC += lamda*(dampfung*zAchse-leistungRadC);
+	leistungRadB += lamda*(dampfung*xAchse-leistungRadB);
+	leistungRadC += lamda*(dampfung*xAchse-leistungRadC);
 
-	leistungRadA += -1*lamda*(dampfung*zAchse-leistungRadA);
-	leistungRadD += -1*lamda*(dampfung*zAchse-leistungRadD);
+	leistungRadA += lamda*(-dampfung*xAchse-leistungRadA);//Vermutlich das gleiche wie oben schon mal geändert
+	leistungRadD += lamda*(-dampfung*xAchse-leistungRadD);
 }
 
 void Lenkung::parken()
